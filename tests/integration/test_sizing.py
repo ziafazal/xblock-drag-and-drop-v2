@@ -137,8 +137,9 @@ class SizingTests(InteractionTestBase, BaseIntegrationTest):
         else:
             self.assertAlmostEqual(
                 width_percent, expected_percent, delta=1,
-                msg="{} should have width of ~{}% (+/- 1%). Actual: {:.2f}%".format(
-                    item_description, expected_percent, width_percent
+                msg="{} should have width of ~{}% (of {} px = {} px) (+/- 1%). Actual: {:.2f}% ({} px)".format(
+                    item_description, expected_percent, container_width,
+                    container_width * expected_percent / 100, width_percent, item.size["width"]
                 )
             )
 
