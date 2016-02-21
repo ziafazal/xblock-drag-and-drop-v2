@@ -90,7 +90,7 @@ class SizingTests(InteractionTestBase, BaseIntegrationTest):
         # A 400x300 image with automatic sizing should be constrained to the maximum width
         Expectation(item_id=5, zone_id=ZONE_50, width_percent=AUTO_MAX_WIDTH),
         # A 200x200 image with automatic sizing
-        Expectation(item_id=6, zone_id=ZONE_50, width_percent=[25, 30]),
+        Expectation(item_id=6, zone_id=ZONE_50, width_percent=[25, 30.2]),
         # A 400x300 image with a specified width of 50%
         Expectation(item_id=7, zone_id=ZONE_50, fixed_width_percent=50),
         # A 200x200 image with a specified width of 50%
@@ -112,8 +112,16 @@ class SizingTests(InteractionTestBase, BaseIntegrationTest):
         self.browser.set_window_size(375, 627)  # iPhone 6 viewport size
         wait = WebDriverWait(self.browser, 2)
         wait.until(lambda browser: browser.get_window_size()["width"] == 375)
-        # Fix padding/margin values specified in "em" units that vary depending on platform/font:
-        self.browser.execute_script('return $(".workbench .main").css("padding", "80px 16px 16px 16px")')
+        # Fix platform inconsistencies caused by scrollbar size:
+        self.browser.execute_script('$("body").css("margin-right", "40px")')
+        scrollbar_width = self.browser.execute_script(
+            "var $outer = $('<div>').css({visibility: 'hidden', width: 100, overflow: 'scroll'}).appendTo('body');"
+            "var widthWithScroll = $('<div>').css({width: '100%'}).appendTo($outer).outerWidth();"
+            "$outer.remove();"
+            "return 100 - widthWithScroll;"
+        )
+        self.browser.execute_script('$(".wrapper-workbench").css("margin-right", "-{}px")'.format(40 + scrollbar_width))
+        # And reduce the wasted space around our XBlock in the workbench:
         self.browser.execute_script('return $(".workbench .preview").css("margin", "0")')
 
     def test_wide_image_mobile(self):
