@@ -435,6 +435,9 @@
 .xblock--drag-and-drop .actions-toolbar .action-toolbar-item {
     display: inline-block;
     margin: 10px 0;
+    position: relative;
+    min-width: 500px;
+    min-height: 2.5em;
 }
 
 .xblock--drag-and-drop .attempts-used {
@@ -459,7 +462,8 @@
 .xblock--drag-and-drop .sidebar-buttons .sidebar-button-wrapper {
     border-right: 1px solid #ddd;
     border-collapse: collapse;
-    padding: 0 5px;
+    padding-right: 5px;
+    margin-left: 5px;
     display: inline-block;
     height: 100%;
 }

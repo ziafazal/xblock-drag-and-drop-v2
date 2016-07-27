@@ -286,6 +286,8 @@ function DragAndDropTemplates(configuration) {
     };
 
     var sidebarButtonTemplate = function(buttonClass, iconClass, buttonText, disabled) {
+
+        var disabled = disabled || false;
         return (
             h('span.sidebar-button-wrapper', {}, [
                 h(
@@ -373,8 +375,9 @@ function DragAndDropTemplates(configuration) {
                     ]),
                 ]),
                 h("section.actions-toolbar", {}, [
-                    sidebarTemplate(ctx),
-                    (ctx.show_submit_answer ? submitAnswerTemplate(ctx) : null),
+
+                    sidebarTemplate(ctx), // sidebar has float:right, so putting it before the content to float
+                    (ctx.show_submit_answer ? submitAnswerTemplate(ctx) : null)
                 ]),
                 keyboardHelpPopupTemplate(ctx),
                 feedbackTemplate(ctx),
