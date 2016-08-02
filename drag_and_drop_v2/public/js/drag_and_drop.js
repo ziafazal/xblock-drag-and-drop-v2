@@ -244,7 +244,11 @@ function DragAndDropTemplates(configuration) {
                 h('div.modal-window-overlay'),
                 h('div.modal-window', {attributes: {role: 'dialog', 'aria-labelledby': labelledby_id}}, [
                     h('div.modal-header', [
+<<<<<<< 4e9e530b183495cc893ac45237c4b45829000049
                         h('h2.modal-window-title#'+labelledby_id, gettext('Keyboard Help'))
+=======
+                        h('h2.modal-window-title#modal-window-title', gettext('Keyboard Help'))
+>>>>>>> [SOL-1944] Review notes: responsiveness, ARIA attributes, focus after reset
                     ]),
                     h('div.modal-content', [
                         h('p', gettext('You can complete this problem using only your keyboard.')),
@@ -271,6 +275,10 @@ function DragAndDropTemplates(configuration) {
 
         return (
           h("section.action-toolbar-item.submit-answer", {}, [
+<<<<<<< 4e9e530b183495cc893ac45237c4b45829000049
+=======
+              h("button.btn-brand.submit-answer-button", {disabled: !button_enabled}, gettext("Submit")),
+>>>>>>> [SOL-1944] Review notes: responsiveness, ARIA attributes, focus after reset
               h(
                   "button.btn-brand.submit-answer-button",
                   {disabled: !button_enabled, attributes: {"aria-describedby": attemptsUsedId}},
@@ -285,9 +293,13 @@ function DragAndDropTemplates(configuration) {
         );
     };
 
+<<<<<<< 4e9e530b183495cc893ac45237c4b45829000049
     var sidebarButtonTemplate = function(buttonClass, iconClass, buttonText, disabled) {
 
         var disabled = disabled || false;
+=======
+    var sidebarButtonTemplate = function(buttonClass, iconClass, buttonText, disabled, tabindex) {
+>>>>>>> [SOL-1944] Review notes: responsiveness, ARIA attributes, focus after reset
         return (
             h('span.sidebar-button-wrapper', {}, [
                 h(
@@ -375,9 +387,14 @@ function DragAndDropTemplates(configuration) {
                     ]),
                 ]),
                 h("section.actions-toolbar", {}, [
+<<<<<<< 4e9e530b183495cc893ac45237c4b45829000049
 
                     sidebarTemplate(ctx), // sidebar has float:right, so putting it before the content to float
                     (ctx.show_submit_answer ? submitAnswerTemplate(ctx) : null)
+=======
+                    sidebarTemplate(ctx),
+                    (ctx.show_submit_answer ? submitAnswerTemplate(ctx) : null),
+>>>>>>> [SOL-1944] Review notes: responsiveness, ARIA attributes, focus after reset
                 ]),
                 keyboardHelpPopupTemplate(ctx),
                 feedbackTemplate(ctx),
