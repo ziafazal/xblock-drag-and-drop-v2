@@ -271,7 +271,6 @@ function DragAndDropTemplates(configuration) {
 
         return (
           h("section.action-toolbar-item.submit-answer", {}, [
-              h("button.btn-brand.submit-answer-button", {disabled: !button_enabled}, gettext("Submit")),
               h(
                   "button.btn-brand.submit-answer-button",
                   {disabled: !button_enabled, attributes: {"aria-describedby": attemptsUsedId}},
