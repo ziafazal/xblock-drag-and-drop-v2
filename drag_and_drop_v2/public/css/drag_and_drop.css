@@ -459,8 +459,7 @@
 
 @media (min-width: 768px) {
     .xblock--drag-and-drop .actions-toolbar .action-toolbar-item.sidebar-buttons {
-        position: absolute;
-        right: 0;
+        float: right;
         margin: 0;
         padding-right: -5px;
     }
