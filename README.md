@@ -11,7 +11,7 @@ The editor is fully guided. Features include:
 * custom zone labels
 * ability to show or hide zone borders
 * custom text and background colors for items
-* optional auto-alignment for items (left, right, center)
+* auto-alignment for items: left, right, center
 * image items
 * decoy items that don't have a zone
 * feedback popups for both correct and incorrect attempts
@@ -122,12 +122,11 @@ whether or not to display borders outlining the zones. It is possible
 to define an arbitrary number of drop zones as long as their labels
 are unique.
 
-Additionally, you can specify the alignment for items once they are dropped in
-the zone.  No alignment is the default, and causes items to stay where the
-learner drops them.  Left alignment causes dropped items to be placed from left
+You can specify the alignment for items once they are dropped in
+the zone.  Centered alignment is the default, and places items from top to bottom
+along the center of the zone. Left alignment causes dropped items to be placed from left
 to right across the zone. Right alignment causes the items to be placed from
-right to left across the zone. Center alignment places items from top to bottom
-along the center of the zone. If left, right, or center alignment is chosen,
+right to left across the zone. If left, right, or center alignment is chosen,
 items dropped in a zone will not overlap, but if the zone is not made large
 enough for all its items, they will overflow the bottom of the zone, and
 potentially, overlap the zones below.
@@ -142,6 +141,9 @@ the item on a zone - the success feedback is shown if the item is dropped on a
 correct zone, while the error feedback is shown when dropping the item on an
 incorrect drop zone.  In assessment mode, the success and error feedback texts
 are not used.
+
+"Maximum items per Zone" setting controls how much items can be dropped into a 
+single zone, allowing some degree of control over items overlapping zones below.
 
 You can select any number of zones for an item to belong to using
 the checkboxes; all zones defined in the previous step are available.

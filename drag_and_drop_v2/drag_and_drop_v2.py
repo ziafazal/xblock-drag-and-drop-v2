@@ -4,8 +4,10 @@
 
 # Imports ###########################################################
 
+from collections import Counter
 import copy
 import json
+import logging
 import urllib
 import webob
 
@@ -23,9 +25,10 @@ from .default_data import DEFAULT_DATA
 # Globals ###########################################################
 
 loader = ResourceLoader(__name__)
-
+logger = logging.getLogger(__name__)
 
 # Classes ###########################################################
+
 
 @XBlock.wants('settings')
 @XBlock.needs('i18n')
@@ -51,6 +54,8 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         SOLUTION_PARTIAL: None,
         SOLUTION_INCORRECT: None
     }
+
+    ALLOWED_ZONE_ALIGNMENTS = ['left', 'right', 'center']
 
     display_name = String(
         display_name=_("Title"),
@@ -125,6 +130,13 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         help=_("Text color to use for draggable items (example: 'white' or '#ffffff')."),
         scope=Scope.settings,
         default="",
+    )
+
+    max_items_per_zone = Integer(
+        display_name=_("Maximum items per zone"),
+        help=_("This setting limits the number of items that can be dropped into a single zone"),
+        scope=Scope.settings,
+        default=None
     )
 
     data = Dict(
@@ -225,6 +237,7 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
             "mode": self.mode,
             "max_attempts": self.max_attempts,
             "zones": self._get_zones(),
+            "max_items_per_zone": self.max_items_per_zone,
             # SDK doesn't supply url_name.
             "url_name": getattr(self, 'url_name', ''),
             "display_zone_labels": self.data.get('displayLabels', False),
@@ -306,6 +319,14 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         """
         Handles studio save.
         """
+        errors = self._validate_submissions(submissions)
+
+        if errors:
+            return {
+                'result': 'failure',
+                'messages': errors
+            }
+
         self.display_name = submissions['display_name']
         self.mode = submissions['mode']
         self.max_attempts = submissions['max_attempts']
@@ -315,11 +336,76 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         self.weight = float(submissions['weight'])
         self.item_background_color = submissions['item_background_color']
         self.item_text_color = submissions['item_text_color']
+        # Possible ValueError should be catched in _validate_submissions
+        self.max_items_per_zone = self._get_max_items_per_zone(submissions)
         self.data = submissions['data']
 
         return {
             'result': 'success',
         }
+
+    @staticmethod
+    def _get_max_items_per_zone(submissions):
+        """
+        Parses Max items per zone value coming from editor.
+
+        Does not catch ValueError intentionally to allow validation to capture this problem
+        """
+        raw_max_items_per_zone = submissions.get('max_items_per_zone', None)
+
+        # tricky condition here: we want None and empty string considered "no value", but integer 0 as "value"
+        # Thus, can't use just `not raw_max_items_per_zone` - integer 0 will be treated as False and
+        # function will return None, so the rest of the code won't be able to tell the difference
+        if raw_max_items_per_zone is None or (
+            isinstance(raw_max_items_per_zone, basestring) and not raw_max_items_per_zone
+        ):
+            return None
+        else:
+            return int(raw_max_items_per_zone)
+
+    def _validate_submissions(self, submissions):
+        """
+        Validates that submissions passed are correct
+        """
+        errors = []
+
+        items = submissions['data']['items']
+
+        try:
+            max_items_per_zone = self._get_max_items_per_zone(submissions)
+        except ValueError as exc:
+            errors.append(_('Failed to parse "Max items per zone" - please check settings'))
+            logger.exception(exc)
+            return errors
+
+        if max_items_per_zone is not None:
+            if max_items_per_zone <= 0:
+                errors.append(_('"Max items per zone" should be positive integer, got {max_items_per_zone}').format(
+                    max_items_per_zone=max_items_per_zone
+                ))
+            else:
+                errors.extend(self._validate_item_zones(items, max_items_per_zone))
+
+        return errors
+
+    @staticmethod
+    def _validate_item_zones(items, max_items_per_zone):
+        errors = []
+        counter = Counter()
+        for item in items:
+            for zone in item.get('zones', []):
+                if zone and zone != 'none':
+                    counter[zone] += 1
+
+        for zone_id, count in counter.iteritems():
+            if count > max_items_per_zone:
+                errors.append(
+                    _('Zone {zone_id} has more items than "Max items per zone" - please check settings').format(
+                        zone_id=zone_id
+                    )
+                )
+
+        return errors
 
     @XBlock.json_handler
     def drop_item(self, item_attempt, suffix=''):
@@ -563,9 +649,7 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         """
         return {
             'zone': attempt['zone'],
-            'correct': correct,
-            'x_percent': attempt['x_percent'],
-            'y_percent': attempt['y_percent'],
+            'correct': correct
         }
 
     def _mark_complete_and_publish_grade(self):
@@ -719,16 +803,22 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         Get drop zone data, defined by the author.
         """
         # Convert zone data from old to new format if necessary
-        zones = []
-        for zone in self.data.get('zones', []):
-            zone = zone.copy()
-            if "uid" not in zone:
-                zone["uid"] = zone.get("title")  # Older versions used title as the zone UID
-            # Remove old, now-unused zone attributes, if present:
-            zone.pop("id", None)
-            zone.pop("index", None)
-            zones.append(zone)
-        return zones
+        return [self._update_zone_format(zone) for zone in self.data.get('zones', [])]
+
+    def _update_zone_format(self, initial_zone):
+        """
+        Modifies zone data to be consistent with latest format.
+        """
+        zone = initial_zone.copy()
+        if "uid" not in zone:
+            zone["uid"] = zone.get("title")  # Older versions used title as the zone UID
+        # Remove old, now-unused zone attributes, if present:
+        zone.pop("id", None)
+        zone.pop("index", None)
+
+        if zone.get('align', None) not in self.ALLOWED_ZONE_ALIGNMENT:
+            zone['align'] = 'center'
+        return zone
 
     def _get_zone_by_uid(self, uid):
         """

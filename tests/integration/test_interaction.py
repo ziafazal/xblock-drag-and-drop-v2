@@ -251,6 +251,13 @@ class InteractionTestBase(object):
                 self.assertNotDraggable(item_key)
                 self.assertEqual(item.get_attribute('class'), 'option fade')
 
+    def _switch_to_block(self, idx):
+        """ Only needed if there are multiple blocks on the page. """
+        self._page = self.browser.find_elements_by_css_selector(self.default_css_selector)[idx]
+        self.scroll_down(0)
+
+
+class ParameterizedTestsMixin(object):
     def parameterized_item_positive_feedback_on_good_move(
             self, items_map, scroll_down=100, action_key=None, assessment_mode=False
     ):
@@ -429,11 +436,6 @@ class InteractionTestBase(object):
             self.assertFalse(dialog_modal_overlay.is_displayed())
             self.assertFalse(dialog_modal.is_displayed())
 
-    def _switch_to_block(self, idx):
-        """ Only needed if ther eare multiple blocks on the page. """
-        self._page = self.browser.find_elements_by_css_selector(self.default_css_selector)[idx]
-        self.scroll_down(0)
-
 
 class DefaultDataTestMixin(object):
     """
@@ -478,7 +480,7 @@ class DefaultDataTestMixin(object):
 
 
 @ddt
-class StandardInteractionTest(DefaultDataTestMixin, InteractionTestBase, BaseIntegrationTest):
+class StandardInteractionTest(DefaultDataTestMixin, InteractionTestBase, ParameterizedTestsMixin, BaseIntegrationTest):
     """
     Testing interactions with Drag and Drop XBlock against default data.
     All interactions are tested using mouse (action_key=None) and four different keyboard action keys.
@@ -572,7 +574,7 @@ class MultipleValidOptionsInteractionTest(DefaultDataTestMixin, InteractionTestB
 
 
 @ddt
-class EventsFiredTest(DefaultDataTestMixin, InteractionTestBase, BaseIntegrationTest):
+class EventsFiredTest(DefaultDataTestMixin, ParameterizedTestsMixin, InteractionTestBase, BaseIntegrationTest):
     """
     Tests that the analytics events are fired and in the proper order.
     """
@@ -709,7 +711,7 @@ class CustomHtmlDataInteractionTest(StandardInteractionTest):
         return self._get_custom_scenario_xml("data/test_html_data.json")
 
 
-class MultipleBlocksDataInteraction(InteractionTestBase, BaseIntegrationTest):
+class MultipleBlocksDataInteraction(ParameterizedTestsMixin, InteractionTestBase, BaseIntegrationTest):
     PAGE_TITLE = 'Drag and Drop v2 Multiple Blocks'
     PAGE_ID = 'drag_and_drop_v2_multi'
 
@@ -821,35 +823,11 @@ class ZoneAlignInteractionTest(InteractionTestBase, BaseIntegrationTest):
         self.assertEquals(self._get_style(zone_item_selector, 'left'), '0px')
         self.assertEquals(self._get_style(zone_item_selector, 'top'), '0px')
 
-        # Center-aligned items are display block
-        if align == 'center':
-            self.assertEquals(self._get_style(zone_item_selector, 'display'), 'block')
-        # but other aligned items are just inline-block
-        else:
-            self.assertEquals(self._get_style(zone_item_selector, 'display'), 'inline-block')
-
-    def test_no_zone_align(self):
-        """
-        Test items placed in a zone with no align setting.
-        Ensure that they are children of div.target, not the zone.
-        """
-        zone_id = "Zone No Align"
-        self.place_item(0, zone_id)
-        zone_item_selector = "div[data-uid='{zone_id}'] .item-wrapper .option".format(zone_id=zone_id)
-        self.assertEquals(len(self._page.find_elements_by_css_selector(zone_item_selector)), 0)
-
-        target_item_selector = '.target > .option'
-        placed_items = self._page.find_elements_by_css_selector(target_item_selector)
-        self.assertEquals(len(placed_items), 1)
-        self.assertEquals(placed_items[0].get_attribute('data-value'), '0')
-
-        # Non-aligned items are absolute positioned, with top/bottom set to px
-        self.assertEquals(self._get_style(target_item_selector, 'position'), 'absolute')
-        self.assertRegexpMatches(self._get_style(target_item_selector, 'left'), r'^\d+(\.\d+)?px$')
-        self.assertRegexpMatches(self._get_style(target_item_selector, 'top'), r'^\d+(\.\d+)?px$')
+        self.assertEquals(self._get_style(zone_item_selector, 'display'), 'inline-block')
 
     @data(
-        ([3, 4, 5], "Zone Invalid Align", "start"),
+        ([0, 1, 2], "Zone No Align", "center"),
+        ([3, 4, 5], "Zone Invalid Align", "center"),
         ([6, 7, 8], "Zone Left Align", "left"),
         ([9, 10, 11], "Zone Right Align", "right"),
         ([12, 13, 14], "Zone Center Align", "center"),
@@ -865,3 +843,55 @@ class ZoneAlignInteractionTest(InteractionTestBase, BaseIntegrationTest):
                 reset.click()
                 self.scroll_down(pixels=0)
                 self.wait_until_disabled(reset)
+
+
+class TestMaxItemsPerZone(InteractionTestBase, BaseIntegrationTest):
+    """
+    Tests for max items per dropzone feature
+    """
+    PAGE_TITLE = 'Drag and Drop v2'
+    PAGE_ID = 'drag_and_drop_v2'
+
+    def _get_scenario_xml(self):
+        scenario_data = loader.load_unicode("data/test_zone_align.json")
+        return self._make_scenario_xml(data=scenario_data, max_items_per_zone=2)
+
+    def test_item_returned_to_bank(self):
+        """
+        Tests that an item is returned to bank if max items per zone reached
+        """
+        zone_id = "Zone No Align"
+        self.place_item(0, zone_id)
+        self.place_item(1, zone_id)
+
+        # precondition check - max items placed into zone
+        self.assert_placed_item(0, zone_id)
+        self.assert_placed_item(1, zone_id)
+
+        self.place_item(2, zone_id)
+
+        self.assert_reverted_item(2)
+        feedback_popup_content = self._get_popup_content()
+        self.assertEqual(
+            feedback_popup_content.get_attribute('innerHTML'),
+            "You cannot add any more items to this zone."
+        )
+
+    def test_item_returned_to_bank_after_refresh(self):
+        zone_id = "Zone Left Align"
+        self.place_item(6, zone_id)
+        self.place_item(7, zone_id)
+
+        # precondition check - max items placed into zone
+        self.assert_placed_item(6, zone_id)
+        self.assert_placed_item(7, zone_id)
+
+        self.place_item(8, zone_id)
+
+        self.assert_reverted_item(8)
+
+        self._page = self.go_to_page(self.PAGE_TITLE)  # refresh the page
+
+        self.assert_placed_item(6, zone_id)
+        self.assert_placed_item(7, zone_id)
+        self.assert_reverted_item(8)

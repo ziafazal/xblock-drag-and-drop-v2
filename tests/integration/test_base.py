@@ -1,5 +1,6 @@
 # Imports ###########################################################
 
+import json
 from xml.sax.saxutils import escape
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -8,6 +9,8 @@ from workbench import scenarios
 from xblockutils.resources import ResourceLoader
 
 from xblockutils.base_test import SeleniumBaseTest
+
+from drag_and_drop_v2.default_data import DEFAULT_DATA
 
 
 # Globals ###########################################################
@@ -27,8 +30,13 @@ class BaseIntegrationTest(SeleniumBaseTest):
         "'": "&apos;"
     }
 
-    @staticmethod
-    def _make_scenario_xml(display_name, show_title, problem_text, completed=False, show_problem_header=True):
+    @classmethod
+    def _make_scenario_xml(
+        cls, display_name="Test DnDv2", show_title=True, problem_text="Question", completed=False,
+        show_problem_header=True, max_items_per_zone=0, data=None
+    ):
+        if not data:
+            data = json.dumps(DEFAULT_DATA)
         return """
             <vertical_demo>
                 <drag-and-drop-v2
@@ -38,6 +46,8 @@ class BaseIntegrationTest(SeleniumBaseTest):
                     show_question_header='{show_problem_header}'
                     weight='1'
                     completed='{completed}'
+                    max_items_per_zone='{max_items_per_zone}'
+                    data='{data}'
                 />
             </vertical_demo>
         """.format(
@@ -46,6 +56,8 @@ class BaseIntegrationTest(SeleniumBaseTest):
             problem_text=escape(problem_text),
             show_problem_header=show_problem_header,
             completed=completed,
+            max_items_per_zone=max_items_per_zone,
+            data=escape(data, cls._additional_escapes)
         )
 
     def _get_custom_scenario_xml(self, filename):
