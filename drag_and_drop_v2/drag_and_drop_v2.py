@@ -18,7 +18,7 @@ from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from xblockutils.settings import XBlockWithSettingsMixin, ThemableXBlockMixin
 
-from .utils import _, DummyTranslationService, FeedbackMessage, FeedbackMessages, ItemStats
+from .utils import _, DummyTranslationService, FeedbackMessage, FeedbackMessages, ItemStats, StateMigration
 from .default_data import DEFAULT_DATA
 
 
@@ -54,8 +54,6 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         SOLUTION_PARTIAL: None,
         SOLUTION_INCORRECT: None
     }
-
-    ALLOWED_ZONE_ALIGNMENTS = ['left', 'right', 'center']
 
     display_name = String(
         display_name=_("Title"),
@@ -235,8 +233,8 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
 
         return {
             "mode": self.mode,
+            "zones": self.zones,
             "max_attempts": self.max_attempts,
-            "zones": self._get_zones(),
             "max_items_per_zone": self.max_items_per_zone,
             # SDK doesn't supply url_name.
             "url_name": getattr(self, 'url_name', ''),
@@ -767,10 +765,7 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         state = {}
 
         for item_id, item in self.item_state.iteritems():
-            if isinstance(item, dict):
-                state[item_id] = item.copy()  # items are manipulated in _get_user_state, so we protect actual data
-            else:
-                state[item_id] = {'top': item[0], 'left': item[1]}
+            state[item_id] = StateMigration.apply_item_state_migrations(item)
 
         return state
 
@@ -798,33 +793,19 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         else:
             return []
 
-    def _get_zones(self):
+    @property
+    def zones(self):
         """
         Get drop zone data, defined by the author.
         """
         # Convert zone data from old to new format if necessary
-        return [self._update_zone_format(zone) for zone in self.data.get('zones', [])]
-
-    def _update_zone_format(self, initial_zone):
-        """
-        Modifies zone data to be consistent with latest format.
-        """
-        zone = initial_zone.copy()
-        if "uid" not in zone:
-            zone["uid"] = zone.get("title")  # Older versions used title as the zone UID
-        # Remove old, now-unused zone attributes, if present:
-        zone.pop("id", None)
-        zone.pop("index", None)
-
-        if zone.get('align', None) not in self.ALLOWED_ZONE_ALIGNMENT:
-            zone['align'] = 'center'
-        return zone
+        return [StateMigration.apply_zone_migrations(zone) for zone in self.data.get('zones', [])]
 
     def _get_zone_by_uid(self, uid):
         """
         Given a zone UID, return that zone, or None.
         """
-        for zone in self._get_zones():
+        for zone in self.zones:
             if zone["uid"] == uid:
                 return zone
 

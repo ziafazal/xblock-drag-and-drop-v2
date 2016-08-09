@@ -1154,19 +1154,12 @@ function DragAndDropBlock(runtime, element, configuration) {
     /**
      * migrateState: Apply any changes necessary to support the 'state' format used by older
      * versions of this XBlock.
-     * We have to do this in JS, not python, since some migrations depend on the image size,
+     * Most migrations are applied in python, but migrations may depend on the image size,
      * which is not known in Python-land.
      */
     var migrateState = function() {
-        var outdated_properties = ['x_percent', 'y_percent', 'left', 'top', 'absolute'];
-        Object.keys(state.items).forEach(function(item_id) {
-            var item = state.items[item_id];
-            outdated_properties.forEach(function(property_name) {
-                if (item.hasOwnProperty(property_name)) {
-                    delete item[property_name];
-                }
-            });
-        });
+        // JS migrations were squashed down to "do nothing", but decided to keep the method
+        // to give a hint to future developers that migrations can be applied in JS
     };
 
     /**
