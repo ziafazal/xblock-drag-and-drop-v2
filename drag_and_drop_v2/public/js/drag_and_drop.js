@@ -288,7 +288,7 @@ function DragAndDropTemplates(configuration) {
         );
     };
 
-    var sidebarButtonTemplate = function(buttonClass, iconClass, buttonText, disabled, tabindex) {
+    var sidebarButtonTemplate = function(buttonClass, iconClass, buttonText, disabled) {
 
         var disabled = disabled || false;
 

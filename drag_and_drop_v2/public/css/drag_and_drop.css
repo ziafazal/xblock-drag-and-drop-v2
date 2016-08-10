@@ -439,15 +439,6 @@
 .xblock--drag-and-drop .actions-toolbar .action-toolbar-item {
     display: inline-block;
     margin: 10px 0;
-    position: relative;
-    min-width: 500px;
-    min-height: 2.5em;
-    width: auto;
-}
-
-.xblock--drag-and-drop .actions-toolbar .action-toolbar-item {
-    display: inline-block;
-    margin: 10px 0;
 }
 
 .xblock--drag-and-drop .attempts-used {
