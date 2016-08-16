@@ -85,7 +85,10 @@ ItemStats = namedtuple(  # pylint: disable=invalid-name
 
 
 class Constants(object):
-    ALLOWED_ZONE_ALIGNMENT = ['left', 'right', 'center']
+    """
+    Namespace class for various constants
+    """
+    ALLOWED_ZONE_ALIGNMENTS = ['left', 'right', 'center']
     DEFAULT_ZONE_ALIGNMENT = 'center'
 
 
@@ -159,7 +162,7 @@ class StateMigration(object):
             "x_percent": "10%", "y_percent": "10%", "width_percent": "10%", "height_percent": "10%"
         }
         """
-        if zone.get('align', None) not in Constants.ALLOWED_ZONE_ALIGNMENT:
+        if zone.get('align', None) not in Constants.ALLOWED_ZONE_ALIGNMENTS:
             zone['align'] = Constants.DEFAULT_ZONE_ALIGNMENT
 
         return zone

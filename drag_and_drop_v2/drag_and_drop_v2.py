@@ -388,6 +388,11 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
 
     @staticmethod
     def _validate_item_zones(items, max_items_per_zone):
+        """
+        Validates correctness of items' zone assignment.
+        """
+
+        # Rule 1: no zone should have more than `max_items_per_zone` items assigned
         errors = []
         counter = Counter()
         for item in items:
@@ -402,6 +407,7 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
                         zone_id=zone_id
                     )
                 )
+        # Rule 1 end
 
         return errors
 

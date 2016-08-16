@@ -6,22 +6,24 @@
 from ddt import ddt, data, unpack
 from mock import Mock, patch
 
+<<<<<<< HEAD
 from selenium.common.exceptions import WebDriverException
+=======
+from selenium.common.exceptions import NoSuchElementException
+>>>>>>> 681dbcd... [SOL-1980] Post-rebase fixes
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
-
-from workbench.runtime import WorkbenchRuntime
 from xblockutils.resources import ResourceLoader
 
 from drag_and_drop_v2.default_data import (
-    TOP_ZONE_ID, MIDDLE_ZONE_ID, BOTTOM_ZONE_ID,
-    TOP_ZONE_TITLE, MIDDLE_ZONE_TITLE, BOTTOM_ZONE_TITLE,
-    ITEM_CORRECT_FEEDBACK, ITEM_INCORRECT_FEEDBACK, ITEM_NO_ZONE_FEEDBACK,
-    ITEM_ANY_ZONE_FEEDBACK, START_FEEDBACK, FINISH_FEEDBACK
+    TOP_ZONE_ID, MIDDLE_ZONE_ID, BOTTOM_ZONE_ID, TOP_ZONE_TITLE, START_FEEDBACK, FINISH_FEEDBACK
+)
+from drag_and_drop_v2.utils import FeedbackMessages
+from tests.integration.test_base import (
+    DefaultDataTestMixin, DefaultAssessmentDataTestMixin, InteractionTestBase, ItemDefinition
 )
 from .test_base import BaseIntegrationTest
-
 
 # Globals ###########################################################
 
@@ -29,6 +31,7 @@ loader = ResourceLoader(__name__)
 
 # Classes ###########################################################
 
+<<<<<<< HEAD
 
 class ItemDefinition(object):
     def __init__(self, item_id, zone_ids, zone_title, feedback_positive, feedback_negative):
@@ -256,6 +259,8 @@ class InteractionTestBase(object):
         self._page = self.browser.find_elements_by_css_selector(self.default_css_selector)[idx]
         self.scroll_down(0)
 
+=======
+>>>>>>> 681dbcd... [SOL-1980] Post-rebase fixes
 
 class ParameterizedTestsMixin(object):
     def parameterized_item_positive_feedback_on_good_move(
@@ -437,46 +442,22 @@ class ParameterizedTestsMixin(object):
             self.assertFalse(dialog_modal.is_displayed())
 
 
-class DefaultDataTestMixin(object):
+class AssessmentTestMixin(object):
     """
-    Provides a test scenario with default options.
+    Provides helper methods for assessment tests
     """
-    PAGE_TITLE = 'Drag and Drop v2'
-    PAGE_ID = 'drag_and_drop_v2'
+    @staticmethod
+    def _wait_until_enabled(element):
+        wait = WebDriverWait(element, 2)
+        wait.until(lambda e: e.is_displayed() and e.get_attribute('disabled') is None)
 
-    items_map = {
-        0: ItemDefinition(
-            0, [TOP_ZONE_ID], TOP_ZONE_TITLE,
-            ITEM_CORRECT_FEEDBACK.format(zone=TOP_ZONE_TITLE), ITEM_INCORRECT_FEEDBACK
-        ),
-        1: ItemDefinition(
-            1, [MIDDLE_ZONE_ID], MIDDLE_ZONE_TITLE,
-            ITEM_CORRECT_FEEDBACK.format(zone=MIDDLE_ZONE_TITLE), ITEM_INCORRECT_FEEDBACK
-        ),
-        2: ItemDefinition(
-            2, [BOTTOM_ZONE_ID], BOTTOM_ZONE_TITLE,
-            ITEM_CORRECT_FEEDBACK.format(zone=BOTTOM_ZONE_TITLE), ITEM_INCORRECT_FEEDBACK
-        ),
-        3: ItemDefinition(
-            3, [MIDDLE_ZONE_ID, TOP_ZONE_ID, BOTTOM_ZONE_ID], MIDDLE_ZONE_TITLE,
-            ITEM_ANY_ZONE_FEEDBACK, ITEM_INCORRECT_FEEDBACK
-        ),
-        4: ItemDefinition(4, [], None, "", ITEM_NO_ZONE_FEEDBACK),
-    }
+    def click_submit(self):
+        submit_button = self._get_submit_button()
 
-    all_zones = [
-        (TOP_ZONE_ID, TOP_ZONE_TITLE),
-        (MIDDLE_ZONE_ID, MIDDLE_ZONE_TITLE),
-        (BOTTOM_ZONE_ID, BOTTOM_ZONE_TITLE)
-    ]
+        self._wait_until_enabled(submit_button)
 
-    feedback = {
-        "intro": START_FEEDBACK,
-        "final": FINISH_FEEDBACK,
-    }
-
-    def _get_scenario_xml(self):  # pylint: disable=no-self-use
-        return "<vertical_demo><drag-and-drop-v2/></vertical_demo>"
+        submit_button.click()
+        self.wait_for_ajax()
 
 
 @ddt
@@ -548,6 +529,152 @@ class StandardInteractionTest(DefaultDataTestMixin, InteractionTestBase, Paramet
         self.interact_with_keyboard_help(use_keyboard=use_keyboard)
 
 
+@ddt
+class AssessmentInteractionTest(
+    DefaultAssessmentDataTestMixin, AssessmentTestMixin, ParameterizedTestsMixin,
+    InteractionTestBase, BaseIntegrationTest
+):
+    """
+    Testing interactions with Drag and Drop XBlock against default data in assessment mode.
+    All interactions are tested using mouse (action_key=None) and four different keyboard action keys.
+    If default data changes this will break.
+    """
+    @data(None, Keys.RETURN, Keys.SPACE, Keys.CONTROL+'m', Keys.COMMAND+'m')
+    def test_item_no_feedback_on_good_move(self, action_key):
+        self.parameterized_item_positive_feedback_on_good_move(
+            self.items_map, action_key=action_key, assessment_mode=True
+        )
+
+    @data(None, Keys.RETURN, Keys.SPACE, Keys.CONTROL+'m', Keys.COMMAND+'m')
+    def test_item_no_feedback_on_bad_move(self, action_key):
+        self.parameterized_item_negative_feedback_on_bad_move(
+            self.items_map, self.all_zones, action_key=action_key, assessment_mode=True
+        )
+
+    @data(None, Keys.RETURN, Keys.SPACE, Keys.CONTROL+'m', Keys.COMMAND+'m')
+    def test_move_items_between_zones(self, action_key):
+        self.parameterized_move_items_between_zones(
+            self.items_map, self.all_zones, action_key=action_key
+        )
+
+    @data(None, Keys.RETURN, Keys.SPACE, Keys.CONTROL+'m', Keys.COMMAND+'m')
+    def test_final_feedback_and_reset(self, action_key):
+        self.parameterized_final_feedback_and_reset(
+            self.items_map, self.feedback, action_key=action_key, assessment_mode=True
+        )
+
+    @data(False, True)
+    def test_keyboard_help(self, use_keyboard):
+        self.interact_with_keyboard_help(use_keyboard=use_keyboard)
+
+    def test_submit_button_shown(self):
+        first_item_definition = self._get_items_with_zone(self.items_map).values()[0]
+
+        submit_button = self._get_submit_button()
+        self.assertTrue(submit_button.is_displayed())
+        self.assertEqual(submit_button.get_attribute('disabled'), 'true')  # no items are placed
+
+        attempts_info = self._get_attempts_info()
+        expected_text = "You have used {num} of {max} attempts.".format(num=0, max=self.MAX_ATTEMPTS)
+        self.assertEqual(attempts_info.text, expected_text)
+        self.assertEqual(attempts_info.is_displayed(), self.MAX_ATTEMPTS > 0)
+
+        self.place_item(first_item_definition.item_id, first_item_definition.zone_ids[0], None)
+
+        self.assertEqual(submit_button.get_attribute('disabled'), None)
+
+    def test_misplaced_items_returned_to_bank(self):
+        """
+        Test items placed to incorrect zones are returned to item bank after submitting solution
+        """
+        correct_items = {0: TOP_ZONE_ID}
+        misplaced_items = {1: BOTTOM_ZONE_ID, 2: MIDDLE_ZONE_ID}
+
+        for item_id, zone_id in correct_items.iteritems():
+            self.place_item(item_id, zone_id)
+
+        for item_id, zone_id in misplaced_items.iteritems():
+            self.place_item(item_id, zone_id)
+
+        self.click_submit()
+        for item_id in correct_items:
+            self.assert_placed_item(item_id, TOP_ZONE_TITLE, assessment_mode=True)
+
+        for item_id in misplaced_items:
+            self.assert_reverted_item(item_id)
+
+    def test_max_attempts_reached_submit_and_reset_disabled(self):
+        """
+        Test "Submit" and "Reset" buttons are disabled when no more attempts remaining
+        """
+        self.place_item(0, TOP_ZONE_ID)
+
+        submit_button, reset_button = self._get_submit_button(), self._get_reset_button()
+
+        attempts_info = self._get_attempts_info()
+
+        for index in xrange(self.MAX_ATTEMPTS):
+            expected_text = "You have used {num} of {max} attempts.".format(num=index, max=self.MAX_ATTEMPTS)
+            self.assertEqual(attempts_info.text, expected_text)  # precondition check
+            self.assertEqual(submit_button.get_attribute('disabled'), None)
+            self.assertEqual(reset_button.get_attribute('disabled'), None)
+            self.click_submit()
+
+        self.assertEqual(submit_button.get_attribute('disabled'), 'true')
+        self.assertEqual(reset_button.get_attribute('disabled'), 'true')
+
+    def test_do_attempt_feedback_is_updated(self):
+        """
+        Test updating overall feedback after submitting solution in assessment mode
+        """
+        # used keyboard mode to avoid bug/feature with selenium "selecting" everything instead of dragging an element
+        self.place_item(0, TOP_ZONE_ID, Keys.RETURN)
+
+        self.click_submit()
+
+        feedback_lines = [
+            "FEEDBACK",
+            FeedbackMessages.correctly_placed(1),
+            FeedbackMessages.not_placed(3),
+            START_FEEDBACK
+
+        ]
+        expected_feedback = "\n".join(feedback_lines)
+        self.assertEqual(self._get_feedback().text, expected_feedback)
+
+        self.place_item(1, BOTTOM_ZONE_ID, Keys.RETURN)
+        self.click_submit()
+
+        feedback_lines = [
+            "FEEDBACK",
+            FeedbackMessages.correctly_placed(1),
+            FeedbackMessages.misplaced(1),
+            FeedbackMessages.not_placed(2),
+            FeedbackMessages.MISPLACED_ITEMS_RETURNED,
+            START_FEEDBACK
+        ]
+        expected_feedback = "\n".join(feedback_lines)
+        self.assertEqual(self._get_feedback().text, expected_feedback)
+
+        # reach final attempt
+        for _ in xrange(self.MAX_ATTEMPTS-3):
+            self.click_submit()
+
+        self.place_item(1, MIDDLE_ZONE_ID, Keys.RETURN)
+        self.place_item(2, BOTTOM_ZONE_ID, Keys.RETURN)
+        self.place_item(3, TOP_ZONE_ID, Keys.RETURN)
+
+        self.click_submit()
+        feedback_lines = [
+            "FEEDBACK",
+            FeedbackMessages.correctly_placed(4),
+            FINISH_FEEDBACK,
+            FeedbackMessages.FINAL_ATTEMPT_TPL.format(score=1.0)
+        ]
+        expected_feedback = "\n".join(feedback_lines)
+        self.assertEqual(self._get_feedback().text, expected_feedback)
+
+
 class MultipleValidOptionsInteractionTest(DefaultDataTestMixin, InteractionTestBase, BaseIntegrationTest):
 
     items_map = {
@@ -571,73 +698,6 @@ class MultipleValidOptionsInteractionTest(DefaultDataTestMixin, InteractionTestB
 
     def _get_scenario_xml(self):
         return self._get_custom_scenario_xml("data/test_multiple_options_data.json")
-
-
-@ddt
-class EventsFiredTest(DefaultDataTestMixin, ParameterizedTestsMixin, InteractionTestBase, BaseIntegrationTest):
-    """
-    Tests that the analytics events are fired and in the proper order.
-    """
-    # These events must be fired in this order.
-    scenarios = (
-        {
-            'name': 'edx.drag_and_drop_v2.loaded',
-            'data': {},
-        },
-        {
-            'name': 'edx.drag_and_drop_v2.item.picked_up',
-            'data': {'item_id': 0},
-        },
-        {
-            'name': 'grade',
-            'data': {'max_value': 1, 'value': (2.0 / 5)},
-        },
-        {
-            'name': 'edx.drag_and_drop_v2.item.dropped',
-            'data': {
-                'is_correct': True,
-                'item_id': 0,
-                'location': TOP_ZONE_TITLE,
-                'location_id': TOP_ZONE_ID,
-            },
-        },
-        {
-            'name': 'edx.drag_and_drop_v2.feedback.opened',
-            'data': {
-                'content': ITEM_CORRECT_FEEDBACK.format(zone=TOP_ZONE_TITLE),
-                'truncated': False,
-            },
-        },
-        {
-            'name': 'edx.drag_and_drop_v2.feedback.closed',
-            'data': {
-                'manually': False,
-                'content': ITEM_CORRECT_FEEDBACK.format(zone=TOP_ZONE_TITLE),
-                'truncated': False,
-            },
-        },
-    )
-
-    def setUp(self):
-        mock = Mock()
-        context = patch.object(WorkbenchRuntime, 'publish', mock)
-        context.start()
-        self.addCleanup(context.stop)
-        self.publish = mock
-        super(EventsFiredTest, self).setUp()
-
-    def _get_scenario_xml(self):  # pylint: disable=no-self-use
-        return "<vertical_demo><drag-and-drop-v2/></vertical_demo>"
-
-    @data(*enumerate(scenarios))  # pylint: disable=star-args
-    @unpack
-    def test_event(self, index, event):
-        self.parameterized_item_positive_feedback_on_good_move(self.items_map)
-        dummy, name, published_data = self.publish.call_args_list[index][0]
-        self.assertEqual(name, event['name'])
-        self.assertEqual(
-                published_data, event['data']
-        )
 
 
 class PreventSpaceBarScrollTest(DefaultDataTestMixin, InteractionTestBase, BaseIntegrationTest):

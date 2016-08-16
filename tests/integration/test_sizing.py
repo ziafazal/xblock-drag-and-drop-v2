@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from xblockutils.resources import ResourceLoader
 
 from .test_base import BaseIntegrationTest
-from .test_interaction import InteractionTestBase
+from tests.integration.test_base import InteractionTestBase
 
 loader = ResourceLoader(__name__)
 
