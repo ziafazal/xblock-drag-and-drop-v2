@@ -167,7 +167,7 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
     )
 
     grade = Float(
-        help=_("Keeps maximum achieved score by student"),
+        help=_("Keeps maximum score achieved by student"),
         scope=Scope.user_state,
         default=0
     )
@@ -372,13 +372,13 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         try:
             max_items_per_zone = self._get_max_items_per_zone(submissions)
         except ValueError as exc:
-            errors.append(_('Failed to parse "Max items per zone" - please check settings'))
+            errors.append(_('Failed to parse "Maximum items per zone"'))
             logger.exception(exc)
             return errors
 
         if max_items_per_zone is not None:
             if max_items_per_zone <= 0:
-                errors.append(_('"Max items per zone" should be positive integer, got {max_items_per_zone}').format(
+                errors.append(_('"Maximum items per zone" should be positive integer, got {max_items_per_zone}').format(
                     max_items_per_zone=max_items_per_zone
                 ))
             else:
@@ -403,7 +403,7 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         for zone_id, count in counter.iteritems():
             if count > max_items_per_zone:
                 errors.append(
-                    _('Zone {zone_id} has more items than "Max items per zone" - please check settings').format(
+                    _('Zone {zone_id} has more items than "Maximum items per zone"').format(
                         zone_id=zone_id
                     )
                 )

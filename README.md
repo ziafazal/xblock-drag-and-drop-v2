@@ -123,13 +123,12 @@ to define an arbitrary number of drop zones as long as their labels
 are unique.
 
 You can specify the alignment for items once they are dropped in
-the zone.  Centered alignment is the default, and places items from top to bottom
+the zone. Centered alignment is the default, and places items from top to bottom
 along the center of the zone. Left alignment causes dropped items to be placed from left
 to right across the zone. Right alignment causes the items to be placed from
-right to left across the zone. If left, right, or center alignment is chosen,
-items dropped in a zone will not overlap, but if the zone is not made large
-enough for all its items, they will overflow the bottom of the zone, and
-potentially, overlap the zones below.
+right to left across the zone. Items dropped in a zone will not overlap, 
+but if the zone is not made large enough for all its items, they will overflow the bottom 
+of the zone, and potentially, overlap the zones below.
 
 ![Drag item edit](/doc/img/edit-view-items.png)
 

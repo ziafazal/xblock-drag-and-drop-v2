@@ -173,9 +173,7 @@ class AssessmentModeFixture(BaseDragAndDropAjaxFixture):
     """
     @staticmethod
     def _make_submission(item_id, zone_id):
-        x_percent, y_percent = str(random.randint(0, 100)) + '%', str(random.randint(0, 100)) + '%'
-        data = {"val": item_id, "zone": zone_id, "x_percent": x_percent, "y_percent": y_percent}
-        return data
+        return {"val": item_id, "zone": zone_id}
 
     def _submit_solution(self, solution):
         for item_id, zone_id in solution.iteritems():
@@ -200,12 +198,11 @@ class AssessmentModeFixture(BaseDragAndDropAjaxFixture):
         item_zone_map = {0: self.ZONE_1, 1: self.ZONE_2}
         for item_id, zone_id in item_zone_map.iteritems():
             data = self._make_submission(item_id, zone_id)
-            x_percent, y_percent = data['x_percent'], data['y_percent']
             res = self.call_handler(self.DROP_ITEM_HANDLER, data)
 
             self.assertEqual(res, {})
 
-            expected_item_state = {'zone': zone_id, 'correct': True, 'x_percent': x_percent, 'y_percent': y_percent}
+            expected_item_state = {'zone': zone_id, 'correct': True}
 
             self.assertIn(str(item_id), self.block.item_state)
             self.assertEqual(self.block.item_state[str(item_id)], expected_item_state)

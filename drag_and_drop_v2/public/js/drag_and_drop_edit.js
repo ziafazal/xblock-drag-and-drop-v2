@@ -512,25 +512,32 @@ function DragAndDropEditBlock(runtime, element, params) {
                             'show_problem_header': $element.find('.show-problem-header').is(':checked'),
                             'item_background_color': $element.find('.item-background-color').val(),
                             'item_text_color': $element.find('.item-text-color').val(),
-                            'max_items_per_zone': $element.find('.#max-items-per-zone').val(),
+                            'max_items_per_zone': $element.find('.max-items-per-zone').val(),
                             'data': _fn.data,
                         };
 
-                        $('.xblock-editor-error-message', element).html();
-                        $('.xblock-editor-error-message', element).css('display', 'none');
+                        var errorMessageElem = $('.xblock-editor-error-messages', element);
+
+                        errorMessageElem.empty();
+                        errorMessageElem.css('display', 'none');
+
                         var handlerUrl = runtime.handlerUrl(element, 'studio_submit');
                         $.post(handlerUrl, JSON.stringify(data), 'json').done(function(response) {
                             if (response.result === 'success') {
                                 window.location.reload(false);
                             } else {
-                                var errorMsg = $("<p></p>").text(gettext('Error: '));
-                                $('.xblock-editor-error-message', element).append(errorMsg);
 
+                                var errorMsgHeader = $("<p></p>").text(gettext('There were some errors saving this Drag and Drop problem:'));
+                                errorMessageElem.append(errorMsgHeader);
+
+                                var listElem = $("<ul></ul>");
+                                errorMessageElem.append(listElem);
                                 for (var i=0; i < response.messages.length; i++) {
-                                    errorMsg = $("<p></p>").text(response.messages[i]);
-                                    $('.xblock-editor-error-message', element).append(errorMsg)
+                                    var errorMsgElem = $("<li></li>").text(response.messages[i]);
+                                    listElem.append(errorMsgElem)
                                 }
-                                $('.xblock-editor-error-message', element).css('display', 'block');
+                                errorMessageElem.css('display', 'block');
+                                errorMessageElem.focus();
                             }
                         });
                     }

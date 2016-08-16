@@ -132,7 +132,7 @@ class StateMigration(object):
         Migrates zone data from v1.0 format to v2.0 format.
 
         Changes:
-        * v1 used zone "title" as UID, while v2 have "uid" property
+        * v1 used zone "title" as UID, while v2 zone has dedicated "uid" property
         * "id" and "index" properties are no longer used
 
         In: {'id': 1, 'index': 2, 'title': "Zone", ...}
@@ -148,7 +148,7 @@ class StateMigration(object):
     @classmethod
     def _zone_v2_to_v2p1(cls, zone):
         """
-        Migrates zone data from v2.0 to v2.5
+        Migrates zone data from v2.0 to v2.1
 
         Changes:
         * Removed "none" zone alignment; default align is "center"
@@ -189,13 +189,13 @@ class StateMigration(object):
         Migrates item_state from v1.5 to v2.0
 
         Changes:
-        * Item placement attributes switched from absolute (left-top) to relative (x_percent-y_pecrent) units
+        * Item placement attributes switched from absolute (left-top) to relative (x_percent-y_percent) units
 
         In: {'zone': 'Zone", 'correct': True, 'top': '100px', 'left': '120px'}
         Out: {'zone': 'Zone", 'correct': True, 'top': '100px', 'left': '120px'}
         """
         # Conversion can't be made as parent dimensions are unknown to python - converted in JS
-        # Since 2.5 JS this conversion became unnecesary, so it was removed from JS code
+        # Since 2.1 JS this conversion became unnecesary, so it was removed from JS code
         return item
 
     @classmethod
@@ -204,7 +204,8 @@ class StateMigration(object):
         Migrates item_state from v1.5 to v2.5
 
         Changes:
-        * Removed "none" zone alignment - remove old "absolute" placement attributes
+        * Removed old "absolute" placement attributes
+        * Removed "none" zone alignment, making "x_percent" and "y_percent" attributes obsolete
 
         In: {'zone': 'Zone", 'correct': True, 'top': '100px', 'left': '120px', 'absolute': true}
         Out: {'zone': 'Zone", 'correct': True}

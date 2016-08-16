@@ -155,6 +155,7 @@
                 <h3>{% trans "Items" %}</h3>
             </header>
             <section class="tab-content">
+                <div class="xblock-editor-error-messages" aria-live="polite" tabindex="0"></div>
                 <form class="item-styles-form">
                     <label class="h4">
                         <span>{% trans fields.item_background_color.display_name %}</span>
@@ -174,9 +175,15 @@
                     <div id="item-text-color-description-{{id_suffix}}" class="form-help">
                       {% trans fields.item_text_color.help %}
                     </div>
-                    <label class="h3" for="max-items-per-zone" title="{{ help_texts.max_items_per_zone }}">{% trans "Maximum items per zone" %}</label>
-                    <input name="max-items-per-zone" id="max-items-per-zone" type="number" min="1" step="1" value="{{ self.max_items_per_zone|unlocalize }}" />
-                    <span class="sr">{{ help_texts.max_items_per_zone }}</span>
+                    <label class="h4" title="{{ help_texts.max_items_per_zone }}">
+                        <span>{% trans fields.max_items_per_zone.display_name %}</span>
+                        <input type="number" min="1" step="1" class="max-items-per-zone"
+                               value="{{ self.max_items_per_zone|unlocalize }}"
+                               aria-describedby="max-items-per-zone-description-{{id_suffix}}">
+                    </label>
+                    <div id="max-items-per-zone-description-{{id_suffix}}" class="form-help">
+                      {% trans fields.item_text_color.help %}
+                    </div>
                 </form>
             </section>
             <section class="tab-content">
@@ -192,8 +199,7 @@
     </section>
 
     <div class="xblock-actions">
-      <span class="xblock-editor-error-message"></span>
-      <ul>
+      <ul class="action-buttons">
         <li class="action-item">
           <a href="#" class="button action-primary continue-button">{% trans "Continue" %}</a>
         </li>

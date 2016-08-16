@@ -205,10 +205,6 @@ msgid "Indicates whether a learner has completed the problem at least once"
 msgstr ""
 
 #: drag_and_drop_v2.py
-msgid "Keeps maximum achieved score by student"
-msgstr ""
-
-#: drag_and_drop_v2.py
 msgid "do_attempt handler should only be called for assessment mode"
 msgstr ""
 
@@ -222,6 +218,23 @@ msgstr ""
 
 #: templates/html/js_templates.html
 msgid "Remove zone"
+msgstr ""
+
+#: drag_and_drop_v2.py
+msgid "Keeps maximum score achieved by student"
+msgstr ""
+
+#: drag_and_drop_v2.py
+msgid "Failed to parse \"Maximum items per zone\""
+msgstr ""
+
+#: drag_and_drop_v2.py
+msgid ""
+"\"Maximum items per zone\" should be positive integer, got {max_items_per_zone}"
+msgstr ""
+
+#: drag_and_drop_v2.py
+msgid "Zone {zone_id} has more items than \"Maximum items per zone\""
 msgstr ""
 
 #: templates/html/js_templates.html
@@ -501,7 +514,7 @@ msgid "None"
 msgstr ""
 
 #: public/js/drag_and_drop_edit.js
-msgid "Error: "
+msgid "There were some errors saving this Drag and Drop problem:"
 msgstr ""
 
 #: utils.py:18
