@@ -337,11 +337,11 @@ class InteractionTestBase(object):
         Place item to descired zone using keybard interaction.
         zone_id=None means place item back into the item bank.
         """
-        # Focus on the item:
+        # Focus on the item, then press the action key:
         item = self._get_item_by_value(item_value)
-        ActionChains(self.browser).move_to_element(item).perform()
-        # Press the action key:
-        item.send_keys(action_key)  # Focus is on first *zone* now
+        item.send_keys("")
+        item.send_keys(action_key)
+        # Focus is on first *zone* now
         self.assert_grabbed_item(item)
         # Get desired zone and figure out how many times we have to press Tab to focus the zone.
         if zone_id is None:  # moving back to the bank
@@ -356,7 +356,7 @@ class InteractionTestBase(object):
             # position of the zone (zero presses for first zone, one press for second zone, etc).
             tab_press_count = self._get_zone_position(zone_id)
         for _ in range(tab_press_count):
-            self._page.send_keys(Keys.TAB)
+            ActionChains(self.browser).send_keys(Keys.TAB).perform()
         zone.send_keys(action_key)
 
     def assert_grabbed_item(self, item):
