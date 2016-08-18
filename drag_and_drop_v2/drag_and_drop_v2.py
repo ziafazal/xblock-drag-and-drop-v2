@@ -346,7 +346,11 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         # Entries that aren't numbers should be treated as null. We assume that if we can
         # turn it into an int, a number was submitted.
         try:
-            return int(raw_max_items_per_zone)
+            max_attempts = int(raw_max_items_per_zone)
+            if max_attempts > 0:
+                return max_attempts
+            else:
+                return None
         except (ValueError, TypeError):
             return None
 
