@@ -191,16 +191,6 @@ class BasicTests(TestCaseMixin, unittest.TestCase):
 
         self.assertIsNone(self.block.max_items_per_zone)
 
-    @ddt.data(0, -1, -5, -100, -1e15)
-    def test_studio_submit_max_items_non_positive(self, max_items_per_zone):
-        def modify_submission(submission):
-            submission['max_items_per_zone'] = max_items_per_zone
-
-        res = self.call_handler('studio_submit', self._make_submission(modify_submission))
-        self.assertEqual(res['result'], 'failure')
-        self.assertEqual(len(res['messages']), 1)
-        self.assertIn('should be positive', res['messages'][0])
-
     def test_expand_static_url(self):
         """ Test the expand_static_url handler needed in Studio when changing the image """
         res = self.call_handler('expand_static_url', '/static/blah.png')

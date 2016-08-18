@@ -317,14 +317,6 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         """
         Handles studio save.
         """
-        errors = self._validate_submissions(submissions)
-
-        if errors:
-            return {
-                'result': 'failure',
-                'messages': errors
-            }
-
         self.display_name = submissions['display_name']
         self.mode = submissions['mode']
         self.max_attempts = submissions['max_attempts']
@@ -351,61 +343,12 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         """
         raw_max_items_per_zone = submissions.get('max_items_per_zone', None)
 
-        # tricky condition here: we want None and empty string considered "no value", but integer 0 as "value"
-        # Thus, can't use just `not raw_max_items_per_zone` - integer 0 will be treated as False and
-        # function will return None, so the rest of the code won't be able to tell the difference
-        if raw_max_items_per_zone is None or (
-            isinstance(raw_max_items_per_zone, basestring) and not raw_max_items_per_zone
-        ):
-            return None
-        else:
-            return int(raw_max_items_per_zone)
-
-    def _validate_submissions(self, submissions):
-        """
-        Validates that submissions passed are correct
-        """
-        errors = []
-
+        # Entries that aren't numbers should be treated as null. We assume that if we can
+        # turn it into an int, a number was submitted.
         try:
-            max_items_per_zone = self._get_max_items_per_zone(submissions)
-        except ValueError as exc:
-            errors.append(_('Failed to parse "Maximum items per zone"'))
-            logger.exception(exc)
-            return errors
-
-        if max_items_per_zone is not None:
-            if max_items_per_zone <= 0:
-                errors.append(_('"Maximum items per zone" should be positive integer, got {max_items_per_zone}').format(
-                    max_items_per_zone=max_items_per_zone
-                ))
-
-        return errors
-
-    @staticmethod
-    def _validate_item_zones(items, max_items_per_zone):
-        """
-        Validates correctness of items' zone assignment.
-        """
-
-        # Rule 1: no zone should have more than `max_items_per_zone` items assigned
-        errors = []
-        counter = Counter()
-        for item in items:
-            for zone in item.get('zones', []):
-                if zone and zone != 'none':
-                    counter[zone] += 1
-
-        for zone_id, count in counter.iteritems():
-            if count > max_items_per_zone:
-                errors.append(
-                    _('Zone {zone_id} has more items than "Maximum items per zone"').format(
-                        zone_id=zone_id
-                    )
-                )
-        # Rule 1 end
-
-        return errors
+            return int(raw_max_items_per_zone)
+        except (ValueError, TypeError):
+            return None
 
     @XBlock.json_handler
     def drop_item(self, item_attempt, suffix=''):
