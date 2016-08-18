@@ -17,6 +17,8 @@ if __name__ == "__main__":
     xblock_sdk_dir = os.path.dirname(os.path.dirname(workbench.__file__))
     sys.path.append(xblock_sdk_dir)
 
+    # Use Chrome for tests instead of firefox by default (just set the env var to "firefox" if you don't want chrome)
+    os.environ.setdefault("SELENIUM_BROWSER", "chrome")
     # Use the workbench settings file:
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "workbench.settings")
     # Configure a range of ports in case the default port of 8081 is in use
