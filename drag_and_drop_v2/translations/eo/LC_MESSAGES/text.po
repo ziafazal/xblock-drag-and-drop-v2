@@ -603,11 +603,6 @@ msgstr ""
 msgid "None"
 msgstr "Nöné Ⱡ'σяєм ι#"
 
-#: public/js/drag_and_drop_edit.js
-msgid "There were some errors saving this Drag and Drop problem:"
-msgstr "Théré wéré sömé érrörs sävïng thïs Dräg änd Dröp prößlém: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
-
-
 #: utils.py:18
 msgid "Fïnäl ättémpt wäs üséd, hïghést sçöré ïs {score} Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя #"
 msgstr ""

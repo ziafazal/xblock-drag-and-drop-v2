@@ -516,28 +516,17 @@ function DragAndDropEditBlock(runtime, element, params) {
                             'data': _fn.data,
                         };
 
-                        var errorMessageElem = $('.xblock-editor-error-messages', element);
-
-                        errorMessageElem.empty();
-                        errorMessageElem.css('display', 'none');
-
                         var handlerUrl = runtime.handlerUrl(element, 'studio_submit');
+                        runtime.notify('save', {state: 'start', message: gettext("Saving")});
                         $.post(handlerUrl, JSON.stringify(data), 'json').done(function(response) {
                             if (response.result === 'success') {
-                                window.location.reload(false);
+                                runtime.notify('save', {state: 'end'});
                             } else {
-
-                                var errorMsgHeader = $("<p></p>").text(gettext('There were some errors saving this Drag and Drop problem:'));
-                                errorMessageElem.append(errorMsgHeader);
-
-                                var listElem = $("<ul></ul>");
-                                errorMessageElem.append(listElem);
-                                for (var i=0; i < response.messages.length; i++) {
-                                    var errorMsgElem = $("<li></li>").text(response.messages[i]);
-                                    listElem.append(errorMsgElem)
-                                }
-                                errorMessageElem.css('display', 'block');
-                                errorMessageElem.focus();
+                                var message = response.messages.join(", ");
+                                runtime.notify('error', {
+                                    'title': window.gettext("There was an error with your form."),
+                                    'message': message
+                                });
                             }
                         });
                     }

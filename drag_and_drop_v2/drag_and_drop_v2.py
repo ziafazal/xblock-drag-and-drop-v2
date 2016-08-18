@@ -367,8 +367,6 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         """
         errors = []
 
-        items = submissions['data']['items']
-
         try:
             max_items_per_zone = self._get_max_items_per_zone(submissions)
         except ValueError as exc:
@@ -381,8 +379,6 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
                 errors.append(_('"Maximum items per zone" should be positive integer, got {max_items_per_zone}').format(
                     max_items_per_zone=max_items_per_zone
                 ))
-            else:
-                errors.extend(self._validate_item_zones(items, max_items_per_zone))
 
         return errors
 

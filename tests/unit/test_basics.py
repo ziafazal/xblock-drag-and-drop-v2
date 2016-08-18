@@ -191,8 +191,8 @@ class BasicTests(TestCaseMixin, unittest.TestCase):
 
         self.assertIsNone(self.block.max_items_per_zone)
 
-    @ddt.data(-1, -5, -100, -1e15)
-    def test_studio_submit_max_items_negative(self, max_items_per_zone):
+    @ddt.data(0, -1, -5, -100, -1e15)
+    def test_studio_submit_max_items_non_positive(self, max_items_per_zone):
         def modify_submission(submission):
             submission['max_items_per_zone'] = max_items_per_zone
 
@@ -200,64 +200,6 @@ class BasicTests(TestCaseMixin, unittest.TestCase):
         self.assertEqual(res['result'], 'failure')
         self.assertEqual(len(res['messages']), 1)
         self.assertIn('should be positive', res['messages'][0])
-
-    def test_studio_submit_max_items_zero_fails_validation(self):
-        def modify_submission(submission):
-            submission['max_items_per_zone'] = 0
-
-        res = self.call_handler('studio_submit', self._make_submission(modify_submission))
-        self.assertEqual(res['result'], 'failure')
-        self.assertEqual(len(res['messages']), 1)
-        self.assertIn("should be positive integer", res['messages'][0])
-
-    def test_studio_submit_max_items_validation_simple(self):
-        def modify_submission(submission):
-            submission['max_items_per_zone'] = 1
-            submission['data']['items'] = [
-                {'zones': ['Zone 1'], 'title': 'item 1'}, {'zones': ['Zone 2'], 'title': 'item 2'}
-            ]
-
-        res = self.call_handler('studio_submit', self._make_submission(modify_submission))
-        self.assertEqual(res, {'result': 'success'})
-
-    def test_studio_submit_max_items_validation_multiple_items(self):
-        def modify_submission(submission):
-            submission['max_items_per_zone'] = 2
-            submission['data']['items'] = [
-                {'zones': ['Zone 1'], 'title': 'item 1'},
-                {'zones': ['Zone 1'], 'title': 'item 2'}
-            ]
-
-        res = self.call_handler('studio_submit', self._make_submission(modify_submission))
-        self.assertEqual(res, {'result': 'success'})
-
-    def test_studio_submit_max_items_validation_failure_simple(self):
-        def modify_submission(submission):
-            submission['max_items_per_zone'] = 1
-            submission['data']['items'] = [
-                {'zones': ['Zone 1'], 'title': 'item 1'}, {'zones': ['Zone 1'], 'title': 'item 2'}
-            ]
-
-        res = self.call_handler('studio_submit', self._make_submission(modify_submission))
-        self.assertEqual(res['result'], 'failure')
-        self.assertEqual(len(res['messages']), 1)
-        self.assertIn("Zone 1", res['messages'][0])
-
-    def test_studio_submit_max_items_validation_failure_multiple_items(self):
-        def modify_submission(submission):
-            submission['max_items_per_zone'] = 1
-            submission['data']['items'] = [
-                {'zones': ['Zone 2'], 'title': 'item 1'},
-                {'zones': ['Zone 2'], 'title': 'item 2'},
-                {'zones': ['Zone 3'], 'title': 'item 3'},
-                {'zones': ['Zone 3'], 'title': 'item 4'},
-            ]
-
-        res = self.call_handler('studio_submit', self._make_submission(modify_submission))
-        self.assertEqual(res['result'], 'failure')
-        self.assertEqual(len(res['messages']), 2)
-        self.assertIn("Zone 2", res['messages'][0])
-        self.assertIn("Zone 3", res['messages'][1])
 
     def test_expand_static_url(self):
         """ Test the expand_static_url handler needed in Studio when changing the image """

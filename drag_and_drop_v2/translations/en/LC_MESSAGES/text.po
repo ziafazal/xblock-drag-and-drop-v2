@@ -513,10 +513,6 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: public/js/drag_and_drop_edit.js
-msgid "There were some errors saving this Drag and Drop problem:"
-msgstr ""
-
 #: utils.py:18
 msgid "Final attempt was used, highest score is {score}"
 msgstr ""
