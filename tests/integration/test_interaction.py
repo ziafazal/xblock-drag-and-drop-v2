@@ -6,11 +6,7 @@
 from ddt import ddt, data, unpack
 from mock import Mock, patch
 
-<<<<<<< HEAD
 from selenium.common.exceptions import WebDriverException
-=======
-from selenium.common.exceptions import NoSuchElementException
->>>>>>> 681dbcd... [SOL-1980] Post-rebase fixes
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -31,7 +27,6 @@ loader = ResourceLoader(__name__)
 
 # Classes ###########################################################
 
-<<<<<<< HEAD
 
 class ItemDefinition(object):
     def __init__(self, item_id, zone_ids, zone_title, feedback_positive, feedback_negative):
@@ -259,8 +254,6 @@ class InteractionTestBase(object):
         self._page = self.browser.find_elements_by_css_selector(self.default_css_selector)[idx]
         self.scroll_down(0)
 
-=======
->>>>>>> 681dbcd... [SOL-1980] Post-rebase fixes
 
 class ParameterizedTestsMixin(object):
     def parameterized_item_positive_feedback_on_good_move(
