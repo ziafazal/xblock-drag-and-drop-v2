@@ -126,9 +126,9 @@ You can specify the alignment for items once they are dropped in
 the zone. Centered alignment is the default, and places items from top to bottom
 along the center of the zone. Left alignment causes dropped items to be placed from left
 to right across the zone. Right alignment causes the items to be placed from
-right to left across the zone. Items dropped in a zone will not overlap, 
-but if the zone is not made large enough for all its items, they will overflow the bottom 
-of the zone, and potentially, overlap the zones below.
+right to left across the zone. Items dropped in a zone will not overlap,
+but if the zone is not made large enough for all its items, they will overflow the bottom
+of the zone, and potentially overlap the zones below.
 
 ![Drag item edit](/doc/img/edit-view-items.png)
 
@@ -141,9 +141,6 @@ correct zone, while the error feedback is shown when dropping the item on an
 incorrect drop zone.  In assessment mode, the success and error feedback texts
 are not used.
 
-"Maximum items per Zone" setting controls how much items can be dropped into a 
-single zone, allowing some degree of control over items overlapping zones below.
-
 You can select any number of zones for an item to belong to using
 the checkboxes; all zones defined in the previous step are available.
 You can leave all of the checkboxes unchecked in order to create a
@@ -151,6 +148,9 @@ You can leave all of the checkboxes unchecked in order to create a
 
 You can define an arbitrary number of drag items, each of which may
 be attached to any number of zones.
+
+"Maximum items per Zone" setting controls how many items can be dropped into a
+single zone, allowing some degree of control over items overlapping zones below.
 
 Scoring
 -------

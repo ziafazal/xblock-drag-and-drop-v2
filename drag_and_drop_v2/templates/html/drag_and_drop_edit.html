@@ -174,7 +174,7 @@
                     <div id="item-text-color-description-{{id_suffix}}" class="form-help">
                       {% trans fields.item_text_color.help %}
                     </div>
-                    <label class="h4" title="{{ help_texts.max_items_per_zone }}">
+                    <label class="h4">
                         <span>{% trans fields.max_items_per_zone.display_name %}</span>
                         <input type="number" min="1" step="1" class="max-items-per-zone"
                                value="{{ self.max_items_per_zone|unlocalize }}"

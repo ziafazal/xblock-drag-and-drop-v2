@@ -122,7 +122,7 @@ class StateMigration(object):
         """
         Applies item_state migrations
         """
-        migrations = (cls._item_state_v1_to_v1p5, cls._item_state_v1p5_to_v2, cls._item_state_v1p5_to_v2p1)
+        migrations = (cls._item_state_v1_to_v1p5, cls._item_state_v1p5_to_v2, cls._item_state_v2_to_v2p1)
 
         return cls._apply_migration(item_state, migrations)
 
@@ -199,9 +199,9 @@ class StateMigration(object):
         return item
 
     @classmethod
-    def _item_state_v1p5_to_v2p1(cls, item):
+    def _item_state_v2_to_v2p1(cls, item):
         """
-        Migrates item_state from v1.5 to v2.5
+        Migrates item_state from v2.0 to v2.1
 
         Changes:
         * Removed old "absolute" placement attributes

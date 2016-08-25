@@ -371,12 +371,3 @@
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
-
-.xblock--drag-and-drop--editor .xblock-editor-error-messages {
-    color: darkred;
-}
-
-.xblock--drag-and-drop--editor .xblock-editor-error-messages ul li {
-    list-style-type: disc;
-    margin-left: 20px;
-}
