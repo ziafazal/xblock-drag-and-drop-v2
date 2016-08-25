@@ -4,7 +4,6 @@
 
 # Imports ###########################################################
 
-from collections import Counter
 import copy
 import json
 import logging

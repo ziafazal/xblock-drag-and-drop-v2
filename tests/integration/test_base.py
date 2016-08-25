@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # Imports ###########################################################
 
 import json
@@ -235,12 +237,20 @@ class InteractionTestBase(object):
             if definition.zone_ids == []
         }
 
+    @classmethod
+    def _get_items_by_zone(cls, items_map):
+        zone_ids = set([definition.zone_ids[0] for _, definition in items_map.items() if definition.zone_ids])
+        return {
+            zone_id: {item_key: definition for item_key, definition in items_map.items()
+                      if definition.zone_ids and definition.zone_ids[0] is zone_id}
+            for zone_id in zone_ids
+        }
+
     def setUp(self):
         super(InteractionTestBase, self).setUp()
 
         scenario_xml = self._get_scenario_xml()
         self._add_scenario(self.PAGE_ID, self.PAGE_TITLE, scenario_xml)
-
         self._page = self.go_to_page(self.PAGE_TITLE)
         # Resize window so that the entire drag container is visible.
         # Selenium has issues when dragging to an area that is off screen.
@@ -318,6 +328,7 @@ class InteractionTestBase(object):
             self.drag_item_to_zone(item_value, zone_id)
         else:
             self.move_item_to_zone(item_value, zone_id, action_key)
+        self.wait_for_ajax()
 
     def drag_item_to_zone(self, item_value, zone_id):
         """
@@ -396,14 +407,12 @@ class InteractionTestBase(object):
         self.assertEqual(item.get_attribute('class'), 'option')
         self.assertEqual(item.get_attribute('tabindex'), '0')
         self.assertEqual(item.get_attribute('aria-grabbed'), 'false')
-        self.assertIsNone(item_content.get_attribute('aria-describedby'))
+        item_description_id = '-item-{}-description'.format(item_value)
+        self.assertEqual(item_content.get_attribute('aria-describedby'), item_description_id)
 
-        try:
-            item.find_element_by_css_selector('.sr')
-        except NoSuchElementException:
-            pass
-        else:
-            self.fail('Reverted item should not have .sr description.')
+        describedby_text = (u'Press "Enter", "Space", "Ctrl-m", or "⌘-m" on an item to select it for dropping, '
+                            'then navigate to the zone you want to drop it on.')
+        self.assertEqual(item.find_element_by_css_selector('.sr').text, describedby_text)
 
     def place_decoy_items(self, items_map, action_key):
         decoy_items = self._get_items_without_zone(items_map)
