@@ -4,7 +4,6 @@
 
 import json
 from xml.sax.saxutils import escape
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
