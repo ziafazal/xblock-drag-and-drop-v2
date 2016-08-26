@@ -131,7 +131,7 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
 
     max_items_per_zone = Integer(
         display_name=_("Maximum items per zone"),
-        help=_("This setting limits the number of items that can be dropped into a single zone"),
+        help=_("This setting limits the number of items that can be dropped into a single zone."),
         scope=Scope.settings,
         default=None
     )
