@@ -186,7 +186,7 @@ function DragAndDropEditBlock(runtime, element, params) {
                         })
                         .on('click', '.remove-zone', _fn.build.form.zone.remove)
                         .on('input', '.zone-row input', _fn.build.form.zone.changedInputHandler)
-                        .on('change', '.align-select', _fn.build.form.zone.changedInputHandler)
+                        .on('change', '.zone-align-select', _fn.build.form.zone.changedInputHandler)
                         .on('click', '.target-image-form button', function(e) {
                             var new_img_url = $.trim($('.target-image-form .background-url', element).val());
                             if (new_img_url) {
