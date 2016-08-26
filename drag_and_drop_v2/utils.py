@@ -215,6 +215,6 @@ class StateMigration(object):
         """
         attributes_to_remove = ['x_percent', 'y_percent', 'left', 'top', 'absolute']
         for attribute in attributes_to_remove:
-            del[attribute]
+            item.pop(attribute, None)
 
         return item
