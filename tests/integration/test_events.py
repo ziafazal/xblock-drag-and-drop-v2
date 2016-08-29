@@ -26,7 +26,7 @@ class EventsFiredTest(DefaultDataTestMixin, ParameterizedTestsMixin, Interaction
         },
         {
             'name': 'grade',
-            'data': {'max_value': 1, 'value': (1.0 / 4)},
+            'data': {'max_value': 1, 'value': (2.0 / 5)},
         },
         {
             'name': 'edx.drag_and_drop_v2.item.dropped',
