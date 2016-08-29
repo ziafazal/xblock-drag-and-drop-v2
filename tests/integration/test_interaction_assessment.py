@@ -15,7 +15,7 @@ from drag_and_drop_v2.default_data import (
 )
 from drag_and_drop_v2.utils import FeedbackMessages
 from .test_base import BaseIntegrationTest
-from .test_interaction import InteractionTestBase, DefaultDataTestMixin
+from .test_interaction import InteractionTestBase, DefaultDataTestMixin, ParameterizedTestsMixin
 
 
 # Globals ###########################################################
@@ -57,7 +57,8 @@ class AssessmentTestMixin(object):
 
 @ddt
 class AssessmentInteractionTest(
-    DefaultAssessmentDataTestMixin, AssessmentTestMixin, InteractionTestBase, BaseIntegrationTest
+    DefaultAssessmentDataTestMixin, AssessmentTestMixin, ParameterizedTestsMixin,
+    InteractionTestBase, BaseIntegrationTest
 ):
     """
     Testing interactions with Drag and Drop XBlock against default data in assessment mode.

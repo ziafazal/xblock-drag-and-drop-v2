@@ -209,18 +209,6 @@ class DefaultDataTestMixin(object):
         return "<vertical_demo><drag-and-drop-v2/></vertical_demo>"
 
 
-class DefaultAssessmentDataTestMixin(DefaultDataTestMixin):
-    """
-    Provides a test scenario with default options in assessment mode.
-    """
-    MAX_ATTEMPTS = 5
-
-    def _get_scenario_xml(self):  # pylint: disable=no-self-use
-        return """
-            <vertical_demo><drag-and-drop-v2 mode='assessment' max_attempts='{max_attempts}'/></vertical_demo>
-        """.format(max_attempts=self.MAX_ATTEMPTS)
-
-
 class InteractionTestBase(object):
     @classmethod
     def _get_items_with_zone(cls, items_map):
