@@ -315,7 +315,7 @@ class DragAndDropBlock(XBlock, XBlockWithSettingsMixin, ThemableXBlockMixin):
         """
         self.display_name = submissions['display_name']
         self.mode = submissions['mode']
-        self.max_attempts = submissions['max_attempts']
+        self.max_attempts = int(submissions['max_attempts'])
         self.show_title = submissions['show_title']
         self.question_text = submissions['problem_text']
         self.show_question_header = submissions['show_problem_header']
