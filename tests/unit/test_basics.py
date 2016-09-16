@@ -227,7 +227,7 @@ class BasicTests(TestCaseMixin, unittest.TestCase):
             submission['max_attempts'] = '1234567890'
 
         body = self._make_submission(modify_submission)
-        res = self.call_handler('studio_submit', body)
+        self.call_handler('studio_submit', body)
         self.assertEqual(self.block.max_attempts, 1234567890)
         self.assertEqual(type(self.block.max_attempts), int)
 
