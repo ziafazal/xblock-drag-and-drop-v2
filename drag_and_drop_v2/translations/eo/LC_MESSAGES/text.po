@@ -582,8 +582,8 @@ msgstr ""
 "séléçt ä dïfférént ïtém). Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢#"
 
 #: public/js/drag_and_drop.js
-msgid "OK"
-msgstr "ÖK Ⱡ'σя#"
+msgid "Close"
+msgstr "Çlösé Ⱡ'σя#"
 
 #: public/js/drag_and_drop.js
 msgid "Problem"

@@ -183,6 +183,7 @@ class ParameterizedTestsMixin(object):
 
         self.assertTrue(dialog_modal_overlay.is_displayed())
         self.assertTrue(dialog_modal.is_displayed())
+        self.assertFocused(dialog_dismiss_button)
 
         if use_keyboard:
             dialog_dismiss_button.send_keys(Keys.RETURN)
