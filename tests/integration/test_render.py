@@ -166,10 +166,7 @@ class TestDragAndDropRender(BaseIntegrationTest):
     def test_item_bank(self):
         self.load_scenario()
         item_bank = self._page.find_element_by_css_selector('.item-bank')
-        description = item_bank.find_element_by_css_selector('p.zone-description')
-        self.assertEqual(description.text, 'Item Bank')
-        # Description should only be visible to screen readers:
-        self.assertEqual(description.get_attribute('class'), 'zone-description sr')
+        self.assertEqual(item_bank.get_attribute("aria-label"), 'Item Bank')
 
     def test_zones(self):
         self.load_scenario()

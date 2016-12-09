@@ -238,15 +238,12 @@ class StandardInteractionTest(DefaultDataTestMixin, InteractionTestBase, Paramet
         for _, definition in self.items_map.items():
             item = self._get_unplaced_item_by_value(definition.item_id)
             ActionChains(self.browser).move_to_element(item).perform()
-            keyboard_help_text = (u'Press Ctrl-m on an item to select it for dropping, '
-                                  'then navigate to the zone you want to drop it on.')
-            self.assertEqual(item.find_element_by_css_selector('.sr.description').text, keyboard_help_text)
-            self.assertEqual(item.find_element_by_css_selector('.sr draggable').text, "draggable")
+            self.assertEqual(item.find_element_by_css_selector('.sr.draggable').text, "draggable")
             item.send_keys("")
-            item.send_keys(action_key)  # grabbed an item
-            self.assertEqual(item.find_element_by_css_selector('.sr draggable').text, "draggable, grabbed")
+            item.send_keys(Keys.ENTER)  # grabbed an item
+            self.assertEqual(item.find_element_by_css_selector('.sr.draggable').text, "draggable, grabbed")
             item.send_keys(Keys.ESCAPE)
-            self.assertEqual(item.find_element_by_css_selector('.sr draggable').text, "draggable")
+            self.assertEqual(item.find_element_by_css_selector('.sr.draggable').text, "draggable")
 
     def test_alt_text_for_zones(self):
         self._get_popup()
