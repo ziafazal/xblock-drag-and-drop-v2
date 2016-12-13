@@ -290,7 +290,7 @@ function DragAndDropTemplates(configuration) {
             h('div.keyboard-help-dialog', [
                 h('div.modal-window-overlay'),
                 h('div.modal-window', {attributes: {role: 'dialog', 'aria-labelledby': labelledby_id}}, [
-                    h('button.modal-dismiss-button.unbutton', {attributes: {tabindex: 1}}, [
+                    h('button.modal-dismiss-button.unbutton', [
                         h('span.fa.fa-remove', {attributes: {'aria-hidden': true}}),
                         h('span.sr', gettext('Close'))
                     ]),
@@ -347,8 +347,7 @@ function DragAndDropTemplates(configuration) {
                     'button.unbutton.btn-default.btn-small',
                     {
                         className: buttonClass,
-                        disabled: options.disabled || options.spinner || false,
-                        attributes: {tabindex: 0}
+                        disabled: options.disabled || options.spinner || false
                     },
                     [
                         h("span.btn-icon.fa", {className: iconClass, attributes: {"aria-hidden": true}}),
@@ -763,7 +762,7 @@ function DragAndDropBlock(runtime, element, configuration) {
     };
 
     var focusModalButton = function() {
-        $root.find('.keyboard-help-dialog .modal-dismiss-button ').focus();
+        $root.find('.keyboard-help-dialog .modal-dismiss-button').focus();
     };
 
     var showKeyboardHelp = function(evt) {
