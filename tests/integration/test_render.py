@@ -244,7 +244,6 @@ class TestDragAndDropRender(BaseIntegrationTest):
     def test_keyboard_help(self):
         self.load_scenario()
 
-        keyboard_help_button = self._get_keyboard_help_button()
         keyboard_help_dialog = self._get_keyboard_help_dialog()
         dialog_modal_overlay = keyboard_help_dialog.find_element_by_css_selector('.modal-window-overlay')
         dialog_modal = keyboard_help_dialog.find_element_by_css_selector('.modal-window')
