@@ -606,10 +606,10 @@ msgstr ""
 
 #: drag_and_drop_v2/public/js/drag_and_drop.js
 msgid ""
-"Press \"Esc\" if you want to cancel the drop operation (for example, to "
+"Press ESC if you want to cancel the drop operation (for example, to "
 "select a different item)."
 msgstr ""
-"Préss \"Ésç\" ïf ýöü wänt tö çänçél thé dröp öpérätïön (för éxämplé, tö "
+"Préss ÉSÇ ïf ýöü wänt tö çänçél thé dröp öpérätïön (för éxämplé, tö "
 "séléçt ä dïfférént ïtém). Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢#"
 
 #: drag_and_drop_v2/public/js/drag_and_drop.js

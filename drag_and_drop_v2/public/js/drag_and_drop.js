@@ -2,9 +2,6 @@ function DragAndDropTemplates(configuration) {
     "use strict";
     var h = virtualDom.h;
 
-    var keyboardHelpButtonClass = "keyboard-help-button";
-    var keyboardHelpText = gettext('Keyboard Help');
-
     var itemSpinnerTemplate = function(item) {
         if (!item.xhr_active) {
             return null;
@@ -307,7 +304,7 @@ function DragAndDropTemplates(configuration) {
                             h('li', gettext('Use only TAB and SHIFT+TAB to navigate between draggable items and drop zones.')),
                             h('li', gettext('Press CTRL+M to select a draggable item (effectively picking it up).')),
                             h('li', gettext('Navigate using TAB and SHIFT+TAB to the appropriate dropzone and press CTRL+M once more to drop it here.')),
-                            h('li', gettext('Press "Esc" if you want to cancel the drop operation (for example, to select a different item).')),
+                            h('li', gettext('Press ESC if you want to cancel the drop operation (for example, to select a different item).')),
                             h('li', gettext('TAB back to the list of draggable items and repeat this process until all of the draggable items have been placed on their respective dropzones.')),
                         ])
                     ]),
@@ -379,7 +376,6 @@ function DragAndDropTemplates(configuration) {
         }
         return(
             h("section.action-toolbar-item.sidebar-buttons", {}, [
-                // sidebarButtonTemplate(keyboardHelpButtonClass, "fa-question", keyboardHelpText),
                 sidebarButtonTemplate("reset-button", "fa-refresh", gettext('Reset'), ctx.disable_reset_button),
                 showAnswerButton,
             ])
@@ -452,17 +448,17 @@ function DragAndDropTemplates(configuration) {
 
     var forwardKeyboardHelpButtonTemplate = function(ctx) {
         return h(
-            'button.unbutton.btn-default.btn-link.'+keyboardHelpButtonClass,
+            'button.unbutton.btn-default.btn-link.'+"keyboard-help-button",
             {attributes: {tabindex: 0}},
             [
                 h(
                     "span.btn-icon.fa.fa-keyboard-o",
-                    {attributes: {"aria-hidden": true}},
-                    []
+                    {attributes: {"aria-hidden": true}}
                 ),
                 // appending space is the simplest way to avoid sticking text to the button, but also to have
                 // them underlined together on hover. When margin was used there was a gap in underlining
-                " " + keyboardHelpText
+                " ",
+                gettext('Keyboard Help')
             ]
         );
     };

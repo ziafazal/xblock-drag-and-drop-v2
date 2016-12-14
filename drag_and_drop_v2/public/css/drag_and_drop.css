@@ -43,6 +43,7 @@
     display: inline-block;
     color: #5e5e5e;
     font-size: 0.875em;
+    margin-bottom: 0.5em;
 }
 
 .xblock--drag-and-drop .problem p {
@@ -474,6 +475,7 @@
 
 .xblock--drag-and-drop .btn-link {
     padding: 1px;
+    font-size: 0.875em;
 }
 
 .xblock--drag-and-drop .btn-default.btn-link:hover,
