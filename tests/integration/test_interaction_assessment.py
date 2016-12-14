@@ -207,7 +207,6 @@ class AssessmentInteractionTest(
             self.assertEqual(item.get_attribute('class'), 'option fade')
 
             item_content = item.find_element_by_css_selector('.item-content')
-            item_description_id = '-item-{}-description'.format(item_definition.item_id)
             self.assertEqual(item_content.get_attribute('aria-describedby'), None)
 
             try:

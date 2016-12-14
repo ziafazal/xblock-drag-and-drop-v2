@@ -119,7 +119,7 @@ class BaseIntegrationTest(SeleniumBaseTest):
         return self._page.find_element_by_css_selector(".keyboard-help")
 
     def _get_keyboard_help_button(self):
-        return self._page.find_element_by_css_selector(".sidebar-buttons .keyboard-help-button")
+        return self._page.find_element_by_css_selector(".keyboard-help-button")
 
     def _get_keyboard_help_dialog(self):
         return self._page.find_element_by_css_selector(".keyboard-help-dialog")

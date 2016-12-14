@@ -450,11 +450,11 @@ msgid "Correctly placed in: {zone_title}"
 msgstr ""
 
 #: drag_and_drop_v2/public/js/drag_and_drop.js:137
-msgid "draggable, grabbed"
+msgid ", draggable, grabbed"
 msgstr ""
 
 #: drag_and_drop_v2/public/js/drag_and_drop.js:137
-msgid "draggable"
+msgid ", draggable"
 msgstr ""
 
 #: public/js/drag_and_drop.js
@@ -480,11 +480,6 @@ msgstr ""
 #: public/js/drag_and_drop.js
 msgid "Keyboard Help"
 msgstr ""
-
-#: public/js/drag_and_drop.js
-msgid "This is a screen reader-friendly problem."
-msgstr ""
-
 
 #: drag_and_drop_v2/public/js/drag_and_drop.js:305
 msgid "This is a screen reader-friendly problem"

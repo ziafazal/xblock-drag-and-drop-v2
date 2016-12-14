@@ -522,11 +522,11 @@ msgid "Correctly placed in: {zone_title}"
 msgstr "Çörréçtlý pläçéd ïn: {zone_title} Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
 
 #: drag_and_drop_v2/public/js/drag_and_drop.js
-msgid "draggable, grabbed"
-msgstr "dräggäßlé, gräßßéd Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+msgid ", draggable, grabbed"
+msgstr ", dräggäßlé, gräßßéd Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
 
 #: drag_and_drop_v2/public/js/drag_and_drop.js
-msgid "draggable"
+msgid ", draggable"
 msgstr "dräggäßlé Ⱡ'σяєм ιρѕυм ∂σł#"
 
 #: public/js/drag_and_drop.js
@@ -554,9 +554,9 @@ msgid "Keyboard Help"
 msgstr "Kéýßöärd Hélp Ⱡ'σяєм ιρѕυм ∂σłσя ѕι#"
 
 #: drag_and_drop_v2/public/js/drag_and_drop.js
-msgid "This is a screen reader-friendly problem"
+msgid "This is a screen reader-friendly problem."
 msgstr ""
-"Thïs ïs ä sçréén réädér-frïéndlý prößlém Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"Thïs ïs ä sçréén réädér-frïéndlý prößlém. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
 "¢σηѕє¢тєтυя#"
 
 #: drag_and_drop_v2/public/js/drag_and_drop.js

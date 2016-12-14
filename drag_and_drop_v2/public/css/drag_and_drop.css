@@ -472,6 +472,20 @@
   font-size: 0.875em;
 }
 
+.xblock--drag-and-drop .btn-link {
+    padding: 1px;
+}
+
+.xblock--drag-and-drop .btn-default.btn-link:hover,
+.xblock--drag-and-drop .btn-default.btn-link.is-hovered,
+.xblock--drag-and-drop .btn-default.btn-link:focus,
+.xblock--drag-and-drop .btn-default.btn-link.is-focused,
+.xblock--drag-and-drop .btn-default.btn-link:active,
+.xblock--drag-and-drop .btn-default.btn-link.is-pressed,
+.xblock--drag-and-drop .btn-default.btn-link.is-active {
+    border: 1px solid transparent;
+}
+
 .xblock--drag-and-drop .btn-default:hover,
 .xblock--drag-and-drop .btn-default.is-hovered,
 .xblock--drag-and-drop .btn-default:focus,
@@ -623,6 +637,10 @@
 
 .xblock--drag-and-drop .btn-icon {
     display: block;
+}
+
+.xblock--drag-and-drop .btn-link .btn-icon {
+    display: inline;
 }
 
 /*** ACTIONS TOOLBAR END ***/
