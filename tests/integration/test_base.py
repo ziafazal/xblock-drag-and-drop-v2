@@ -151,9 +151,9 @@ class BaseIntegrationTest(SeleniumBaseTest):
             query = 'return $("{selector}").get(0).style.{style}'
         return self.browser.execute_script(query.format(selector=selector, style=style))
 
-    def _patch_sr_read_texts(self):
+    def _patch_sr_read_text(self):
         """
-        Creates a mock SR.readTexts function that stores submitted texts into a global variable
+        Creates a mock SR.readText function that stores submitted text into a global variable
         for later inspection.
         Returns a getter function that returns stored SR texts.
         """
@@ -161,8 +161,9 @@ class BaseIntegrationTest(SeleniumBaseTest):
             """
             window.SR = {
                 received_texts: [],
-                readTexts: function(texts) {
-                    window.SR.received_texts.push(texts);
+                clear: function() {},
+                readText: function(text) {
+                    window.SR.received_texts.push(text);
                 }
             };
             """
