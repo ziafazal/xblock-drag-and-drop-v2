@@ -257,38 +257,6 @@ function DragAndDropTemplates(configuration) {
         );
     };
 
-    var popupTemplate = function(ctx) {
-        var popupSelector = 'div.popup';
-        if (ctx.popup_html && !ctx.last_action_correct) {
-            popupSelector += '.popup-incorrect';
-        }
-
-        return (
-            h(
-                "div.popup-wrapper",
-                {
-                    attributes: {
-                        'aria-live': 'polite',
-                        'aria-atomic': 'true',
-                        'aria-relevant': 'additions',
-                    }
-                },
-                [
-                    h(
-                        popupSelector,
-                        {
-                            style: {display: ctx.popup_html ? 'block' : 'none'},
-                        },
-                        [
-                            h('div.close.icon-remove-sign.fa-times-circle'),
-                            h('p.popup-content', {innerHTML: ctx.popup_html}),
-                        ]
-                    )
-                ]
-            )
-        )
-    };
-
     var keyboardHelpPopupTemplate = function(ctx) {
         var labelledby_id = 'modal-window-title-'+configuration.url_name;
         return (
