@@ -77,7 +77,7 @@ class ParameterizedTestsMixin(object):
             feedback_popup_html = feedback_popup_content.get_attribute('innerHTML')
             self.assertEqual(feedback_popup_html, '')
             self.assertFalse(popup.is_displayed())
-            self.assertEqual(get_sr_texts()[-1], feedback['intro'])
+            self.assertEqual(get_sr_texts(), [])
 
     def parameterized_item_negative_feedback_on_bad_move_standard(
             self, items_map, all_zones, scroll_down=100, action_key=None, feedback=None
@@ -125,7 +125,7 @@ class ParameterizedTestsMixin(object):
                 self.assertEqual(feedback_popup_html, '')
                 self.assertFalse(popup.is_displayed())
                 self.assert_placed_item(definition.item_id, zone_title, assessment_mode=True)
-                self.assertEqual(get_sr_texts()[-1], feedback['intro'])
+                self.assertEqual(get_sr_texts(), [])
 
     def parameterized_move_items_between_zones(self, items_map, all_zones, scroll_down=100, action_key=None):
         # Scroll drop zones into view to make sure Selenium can successfully drop items
