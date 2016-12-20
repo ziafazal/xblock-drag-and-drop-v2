@@ -247,7 +247,7 @@ function DragAndDropTemplates(configuration) {
             h('div.feedback', {attributes: {'role': 'group', 'aria-label': gettext('Feedback')}}, [
                 h(
                     "div.feedback-content",
-                    {attributes: {'aria-live': 'polite', 'aria-atomic': 'true', 'aria-relevant': 'all'}},
+                    {},
                     [
                         h('h3.title1', { style: { display: feedback_display } }, gettext('Feedback')),
                         h('div.messages', { style: { display: feedback_display } }, feedback_messages),
@@ -387,12 +387,7 @@ function DragAndDropTemplates(configuration) {
             popupSelector,
             {
                 style: {display: have_messages ? 'block' : 'none'},
-                attributes: {
-                    "tabindex": "-1",
-                    'aria-live': 'polite',
-                    'aria-atomic': 'true',
-                    'aria-relevant': 'all',
-                }
+                attributes: {"tabindex": "-1"}
             },
             [
                 h(
@@ -464,7 +459,7 @@ function DragAndDropTemplates(configuration) {
 
         return h('div.problem-progress', {
             id: configuration.url_name + '-problem-progress',
-            attributes: {'role': 'status', 'aria-live': 'polite'}
+            attributes: {role: 'status'}
         }, progress_text);
     };
 
@@ -774,7 +769,6 @@ function DragAndDropBlock(runtime, element, configuration) {
     var applyState = function(keepDraggableInit) {
         sendFeedbackPopupEvents();
         updateDOM();
-        readScreenReaderMessages();
         if (!keepDraggableInit) {
             destroyDraggable();
             if (!state.finished) {
@@ -821,7 +815,7 @@ function DragAndDropBlock(runtime, element, configuration) {
 
     // Uses edX JS accessibility tools to read feedback messages when present.
     var readScreenReaderMessages = function() {
-        if (window.SR && window.SR.readText && window.SR.clear) {
+        if (window.SR && window.SR.readText) {
             var pluckMessages = function(feedback_items) {
                 return feedback_items.map(function(item) {
                     return item.message;
@@ -839,7 +833,7 @@ function DragAndDropBlock(runtime, element, configuration) {
             if (state.feedback && configuration.mode === DragAndDropBlock.ASSESSMENT_MODE) {
                 if (state.feedback.length > 0) {
                     if (!state.last_action_correct) {
-                        messages.push(gettext("Some of your answers were not correct."))
+                        messages.push(gettext("Some of your answers were not correct."));
                     }
                     messages = messages.concat(
                         gettext("Hints:"),
@@ -847,8 +841,6 @@ function DragAndDropBlock(runtime, element, configuration) {
                     );
                 }
             }
-
-            SR.clear();
             SR.readText(messages.join('\n'));
         }
     };
@@ -1137,6 +1129,7 @@ function DragAndDropBlock(runtime, element, configuration) {
                         state.finished = true;
                         state.overall_feedback = data.overall_feedback;
                     }
+                    readScreenReaderMessages();
                 }
                 applyState();
             })
@@ -1229,6 +1222,7 @@ function DragAndDropBlock(runtime, element, configuration) {
             } else {
                 state.finished = true;
             }
+            readScreenReaderMessages();
         }).always(function() {
             state.submit_spinner = false;
             applyState();
