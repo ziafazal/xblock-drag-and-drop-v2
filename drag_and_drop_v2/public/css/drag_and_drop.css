@@ -445,8 +445,6 @@
 .xblock--drag-and-drop .btn-brand {
     display: inline-block;
     font-weight: normal;
-    background: #0079bc;
-    color: #fcfcfc;
     -webkit-transition: color 0.125s ease-in-out 0s, border-color 0.125s ease-in-out 0s, background 0.125s ease-in-out 0s, box-shadow 0.125s ease-in-out 0s;
     -moz-transition: color 0.125s ease-in-out 0s, border-color 0.125s ease-in-out 0s, background 0.125s ease-in-out 0s, box-shadow 0.125s ease-in-out 0s;
     transition: color 0.125s ease-in-out 0s, border-color 0.125s ease-in-out 0s, background 0.125s ease-in-out 0s, box-shadow 0.125s ease-in-out 0s;
@@ -476,16 +474,7 @@
 .xblock--drag-and-drop .btn-link {
     padding: 1px;
     font-size: 0.875em;
-}
-
-.xblock--drag-and-drop .btn-default.btn-link:hover,
-.xblock--drag-and-drop .btn-default.btn-link.is-hovered,
-.xblock--drag-and-drop .btn-default.btn-link:focus,
-.xblock--drag-and-drop .btn-default.btn-link.is-focused,
-.xblock--drag-and-drop .btn-default.btn-link:active,
-.xblock--drag-and-drop .btn-default.btn-link.is-pressed,
-.xblock--drag-and-drop .btn-default.btn-link.is-active {
-    border: 1px solid transparent;
+    font-weight: normal;
 }
 
 .xblock--drag-and-drop .btn-default:hover,

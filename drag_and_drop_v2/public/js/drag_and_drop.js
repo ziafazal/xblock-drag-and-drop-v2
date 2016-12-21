@@ -448,8 +448,7 @@ function DragAndDropTemplates(configuration) {
 
     var forwardKeyboardHelpButtonTemplate = function(ctx) {
         return h(
-            'button.unbutton.btn-default.btn-link.'+"keyboard-help-button",
-            {attributes: {tabindex: 0}},
+            'button.unbutton.btn-link.keyboard-help-button',
             [
                 h(
                     "span.btn-icon.fa.fa-keyboard-o",
