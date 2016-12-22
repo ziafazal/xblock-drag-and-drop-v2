@@ -218,7 +218,6 @@ class TestDragAndDropRender(BaseIntegrationTest):
         dialog_modal_overlay = keyboard_help_dialog.find_element_by_css_selector('.modal-window-overlay')
         dialog_modal = keyboard_help_dialog.find_element_by_css_selector('.modal-window')
 
-        self.assertEqual(keyboard_help_button.get_attribute('tabindex'), '0')
         self.assertFalse(dialog_modal_overlay.is_displayed())
         self.assertFalse(dialog_modal.is_displayed())
         self.assertEqual(dialog_modal.get_attribute('role'), 'dialog')
