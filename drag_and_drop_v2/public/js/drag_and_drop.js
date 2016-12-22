@@ -396,8 +396,7 @@ function DragAndDropTemplates(configuration) {
         return h(
             popupSelector,
             {
-                style: {display: have_messages ? 'block' : 'none'},
-                attributes: {"tabindex": "-1"}
+                style: {display: have_messages ? 'block' : 'none'}
             },
             [
                 h(
