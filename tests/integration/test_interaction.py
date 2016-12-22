@@ -31,7 +31,6 @@ class ParameterizedTestsMixin(object):
         if feedback is None:
             feedback = self.feedback
 
-        get_sr_texts = self._patch_sr_read_text()
         popup = self._get_popup()
         feedback_popup_content = self._get_popup_content()
 
@@ -54,7 +53,7 @@ class ParameterizedTestsMixin(object):
             else:
                 overall_feedback = feedback['intro']
             expected_sr_texts.append(overall_feedback)
-            self.assertEqual(get_sr_texts()[-1], '\n'.join(expected_sr_texts))
+            self.assert_reader_feedback_messages(expected_sr_texts)
 
     def parameterized_item_positive_feedback_on_good_move_assessment(
             self, items_map, scroll_down=100, action_key=None, feedback=None
@@ -62,7 +61,6 @@ class ParameterizedTestsMixin(object):
         if feedback is None:
             feedback = self.feedback
 
-        get_sr_texts = self._patch_sr_read_text()
         popup = self._get_popup()
         feedback_popup_content = self._get_popup_content()
 
@@ -77,7 +75,7 @@ class ParameterizedTestsMixin(object):
             feedback_popup_html = feedback_popup_content.get_attribute('innerHTML')
             self.assertEqual(feedback_popup_html, '')
             self.assertFalse(popup.is_displayed())
-            self.assertEqual(get_sr_texts(), [])
+            self.assert_reader_feedback_messages([])
 
     def parameterized_item_negative_feedback_on_bad_move_standard(
             self, items_map, all_zones, scroll_down=100, action_key=None, feedback=None
@@ -85,7 +83,6 @@ class ParameterizedTestsMixin(object):
         if feedback is None:
             feedback = self.feedback
 
-        get_sr_texts = self._patch_sr_read_text()
         popup = self._get_popup()
         feedback_popup_content = self._get_popup_content()
 
@@ -101,7 +98,7 @@ class ParameterizedTestsMixin(object):
                 self.assertTrue(popup.is_displayed())
                 self.assert_reverted_item(definition.item_id)
                 expected_sr_texts = [definition.feedback_negative, feedback['intro']]
-                self.assertEqual(get_sr_texts()[-1], '\n'.join(expected_sr_texts))
+                self.assert_reader_feedback_messages(expected_sr_texts)
 
     def parameterized_item_negative_feedback_on_bad_move_assessment(
             self, items_map, all_zones, scroll_down=100, action_key=None, feedback=None
@@ -109,7 +106,6 @@ class ParameterizedTestsMixin(object):
         if feedback is None:
             feedback = self.feedback
 
-        get_sr_texts = self._patch_sr_read_text()
         popup = self._get_popup()
         feedback_popup_content = self._get_popup_content()
 
@@ -125,7 +121,7 @@ class ParameterizedTestsMixin(object):
                 self.assertEqual(feedback_popup_html, '')
                 self.assertFalse(popup.is_displayed())
                 self.assert_placed_item(definition.item_id, zone_title, assessment_mode=True)
-                self.assertEqual(get_sr_texts(), [])
+                self.assert_reader_feedback_messages([])
 
     def parameterized_move_items_between_zones(self, items_map, all_zones, scroll_down=100, action_key=None):
         # Scroll drop zones into view to make sure Selenium can successfully drop items

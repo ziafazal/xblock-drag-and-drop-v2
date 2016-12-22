@@ -151,27 +151,6 @@ class BaseIntegrationTest(SeleniumBaseTest):
             query = 'return $("{selector}").get(0).style.{style}'
         return self.browser.execute_script(query.format(selector=selector, style=style))
 
-    def _patch_sr_read_text(self):
-        """
-        Creates a mock SR.readText function that stores submitted text into a global variable
-        for later inspection.
-        Returns a getter function that returns stored SR texts.
-        """
-        self.browser.execute_script(
-            """
-            window.SR = {
-                received_texts: [],
-                readText: function(text) {
-                    window.SR.received_texts.push(text);
-                }
-            };
-            """
-        )
-
-        def get_sr_texts():
-            return self.browser.execute_script('return window.SR.received_texts')
-        return get_sr_texts
-
     @staticmethod
     def get_element_html(element):
         return element.get_attribute('innerHTML').strip()
@@ -497,3 +476,10 @@ class InteractionTestBase(object):
 
     def assert_button_enabled(self, submit_button, enabled=True):
         self.assertEqual(submit_button.is_enabled(), enabled)
+
+    def assert_reader_feedback_messages(self, expected_message_lines):
+        expected_paragraphs = ['<p>{}</p>'.format(l) for l in expected_message_lines]
+        expected_html = ''.join(expected_paragraphs)
+        feedback_area = self._page.find_element_by_css_selector('.reader-feedback-area')
+        actual_html = feedback_area.get_attribute('innerHTML')
+        self.assertEqual(actual_html, expected_html)
